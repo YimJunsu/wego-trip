@@ -1,0 +1,62 @@
+[
+  {
+    "id": "exp-1",
+    "tripId": "trp-gangneung",
+    "payerId": "usr-1",
+    "amount": 80000,
+    "description": "주유비 + 톨게이트",
+    "category": "교통",
+    "participantIds": ["usr-1", "usr-2", "usr-3", "usr-4"],
+    "createdAt": "2026-08-14T09:20:00+09:00"
+  },
+  {
+    "id": "exp-2",
+    "tripId": "trp-gangneung",
+    "payerId": "usr-2",
+    "amount": 240000,
+    "description": "안목해변 펜션 2박",
+    "category": "숙박",
+    "participantIds": ["usr-1", "usr-2", "usr-3", "usr-4"],
+    "createdAt": "2026-08-14T15:40:00+09:00"
+  },
+  {
+    "id": "exp-3",
+    "tripId": "trp-gangneung",
+    "payerId": "usr-3",
+    "amount": 152000,
+    "description": "주문진 회센터 저녁",
+    "category": "식비",
+    "participantIds": ["usr-1", "usr-2", "usr-3", "usr-4"],
+    "createdAt": "2026-08-14T19:05:00+09:00"
+  },
+  {
+    "id": "exp-4",
+    "tripId": "trp-gangneung",
+    "payerId": "usr-1",
+    "amount": 24000,
+    "description": "커피거리 카페",
+    "category": "카페",
+    "participantIds": ["usr-1", "usr-3"],
+    "createdAt": "2026-08-15T11:10:00+09:00"
+  },
+  {
+    "id": "exp-5",
+    "tripId": "trp-gangneung",
+    "payerId": "usr-4",
+    "amount": 18400,
+    "description": "편의점 간식·물",
+    "category": "간식",
+    "participantIds": ["usr-1", "usr-2", "usr-3", "usr-4"],
+    "createdAt": "2026-08-15T21:30:00+09:00"
+  },
+  {
+    "id": "exp-6",
+    "tripId": "trp-jeju",
+    "payerId": "usr-5",
+    "amount": 96000,
+    "description": "렌터카 3일",
+    "category": "교통",
+    "participantIds": ["usr-1", "usr-2", "usr-5"],
+    "createdAt": "2026-09-05T10:00:00+09:00"
+  }
+]

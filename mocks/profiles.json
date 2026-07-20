@@ -1,0 +1,27 @@
+[
+  {
+    "id": "usr-1",
+    "nickname": "준수",
+    "avatarUrl": "https://picsum.photos/seed/wego-junsu/96/96"
+  },
+  {
+    "id": "usr-2",
+    "nickname": "서준",
+    "avatarUrl": "https://picsum.photos/seed/wego-seojun/96/96"
+  },
+  {
+    "id": "usr-3",
+    "nickname": "하늘",
+    "avatarUrl": "https://picsum.photos/seed/wego-haneul/96/96"
+  },
+  {
+    "id": "usr-4",
+    "nickname": "도윤",
+    "avatarUrl": "https://picsum.photos/seed/wego-doyun/96/96"
+  },
+  {
+    "id": "usr-5",
+    "nickname": "지우",
+    "avatarUrl": "https://picsum.photos/seed/wego-jiwoo/96/96"
+  }
+]

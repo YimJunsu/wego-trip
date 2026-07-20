@@ -1,0 +1,5 @@
+# sharp: next/image 이미지 최적화. unrs-resolver: eslint의 import 경로 해석.
+# 둘 다 네이티브 바이너리라 postinstall 빌드가 필요하다.
+allowBuilds:
+  sharp: true
+  unrs-resolver: true

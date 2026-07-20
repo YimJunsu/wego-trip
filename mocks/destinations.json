@@ -1,0 +1,372 @@
+[
+  {
+    "id": "dst-gwangalli",
+    "name": "부산 광안리",
+    "region": "부산",
+    "themes": ["sea", "city"],
+    "budget": "mid",
+    "seasons": ["spring", "summer", "autumn"],
+    "summary": "광안대교 야경과 해변 포차. 밤이 길어지는 바다.",
+    "emoji": "🌉"
+  },
+  {
+    "id": "dst-haeundae",
+    "name": "부산 해운대",
+    "region": "부산",
+    "themes": ["sea", "city", "activity"],
+    "budget": "high",
+    "seasons": ["summer"],
+    "summary": "해수욕장과 마천루가 붙어 있는 여름의 기본값.",
+    "emoji": "🏖️"
+  },
+  {
+    "id": "dst-gangneung",
+    "name": "강릉 안목해변",
+    "region": "강원",
+    "themes": ["sea", "healing"],
+    "budget": "mid",
+    "seasons": ["spring", "summer", "autumn", "winter"],
+    "summary": "커피거리와 파도 소리. 아무것도 안 해도 되는 곳.",
+    "emoji": "☕"
+  },
+  {
+    "id": "dst-sokcho",
+    "name": "속초 중앙시장",
+    "region": "강원",
+    "themes": ["city", "sea"],
+    "budget": "low",
+    "seasons": ["autumn", "winter"],
+    "summary": "닭강정과 오징어순대. 먹으러 가는 여행.",
+    "emoji": "🍗"
+  },
+  {
+    "id": "dst-yangyang",
+    "name": "양양 서피비치",
+    "region": "강원",
+    "themes": ["sea", "activity"],
+    "budget": "high",
+    "seasons": ["summer"],
+    "summary": "서핑과 해변 라운지. 낮부터 노는 바다.",
+    "emoji": "🏄"
+  },
+  {
+    "id": "dst-seoraksan",
+    "name": "설악산 국립공원",
+    "region": "강원",
+    "themes": ["mountain", "activity"],
+    "budget": "low",
+    "seasons": ["autumn"],
+    "summary": "단풍철 흔들바위. 다리는 아프지만 사진은 남는다.",
+    "emoji": "⛰️"
+  },
+  {
+    "id": "dst-pyeongchang",
+    "name": "평창 대관령",
+    "region": "강원",
+    "themes": ["mountain", "healing"],
+    "budget": "mid",
+    "seasons": ["winter", "summer"],
+    "summary": "양떼목장과 능선. 여름엔 시원하고 겨울엔 눈이다.",
+    "emoji": "🐑"
+  },
+  {
+    "id": "dst-jeongseon",
+    "name": "정선 아우라지",
+    "region": "강원",
+    "themes": ["mountain", "healing"],
+    "budget": "low",
+    "seasons": ["spring", "autumn"],
+    "summary": "레일바이크와 오일장. 느리게 가는 강원 내륙.",
+    "emoji": "🚲"
+  },
+  {
+    "id": "dst-chuncheon",
+    "name": "춘천 남이섬",
+    "region": "강원",
+    "themes": ["healing", "city"],
+    "budget": "mid",
+    "seasons": ["spring", "autumn"],
+    "summary": "메타세쿼이아 길과 닭갈비. 당일치기의 정석.",
+    "emoji": "🌳"
+  },
+  {
+    "id": "dst-jeju-east",
+    "name": "제주 성산일출봉",
+    "region": "제주",
+    "themes": ["sea", "mountain"],
+    "budget": "high",
+    "seasons": ["spring", "autumn"],
+    "summary": "분화구 위에서 보는 일출. 새벽에 일어날 각오 필요.",
+    "emoji": "🌅"
+  },
+  {
+    "id": "dst-jeju-west",
+    "name": "제주 협재해변",
+    "region": "제주",
+    "themes": ["sea", "healing"],
+    "budget": "high",
+    "seasons": ["summer"],
+    "summary": "에메랄드빛 물과 비양도 실루엣.",
+    "emoji": "🏝️"
+  },
+  {
+    "id": "dst-udo",
+    "name": "제주 우도",
+    "region": "제주",
+    "themes": ["sea", "activity"],
+    "budget": "mid",
+    "seasons": ["spring", "summer"],
+    "summary": "스쿠터로 한 바퀴. 땅콩아이스크림은 필수.",
+    "emoji": "🛵"
+  },
+  {
+    "id": "dst-hallasan",
+    "name": "제주 한라산",
+    "region": "제주",
+    "themes": ["mountain", "activity"],
+    "budget": "low",
+    "seasons": ["autumn", "winter"],
+    "summary": "백록담까지 왕복 9시간. 겨울 설경이 보상.",
+    "emoji": "🏔️"
+  },
+  {
+    "id": "dst-yeosu",
+    "name": "여수 밤바다",
+    "region": "전남",
+    "themes": ["sea", "city"],
+    "budget": "mid",
+    "seasons": ["spring", "summer", "autumn"],
+    "summary": "케이블카와 낭만포차. 노래 그대로다.",
+    "emoji": "🎆"
+  },
+  {
+    "id": "dst-suncheon",
+    "name": "순천만 습지",
+    "region": "전남",
+    "themes": ["healing"],
+    "budget": "low",
+    "seasons": ["autumn"],
+    "summary": "갈대밭 위로 지는 해. 걷기 좋은 평지.",
+    "emoji": "🌾"
+  },
+  {
+    "id": "dst-damyang",
+    "name": "담양 죽녹원",
+    "region": "전남",
+    "themes": ["healing", "mountain"],
+    "budget": "low",
+    "seasons": ["spring", "summer"],
+    "summary": "대숲 그늘과 떡갈비. 더위를 피하는 길.",
+    "emoji": "🎋"
+  },
+  {
+    "id": "dst-boseong",
+    "name": "보성 녹차밭",
+    "region": "전남",
+    "themes": ["healing"],
+    "budget": "low",
+    "seasons": ["spring", "summer"],
+    "summary": "초록 계단밭. 사진은 오전에 찍어야 한다.",
+    "emoji": "🍵"
+  },
+  {
+    "id": "dst-mokpo",
+    "name": "목포 근대역사거리",
+    "region": "전남",
+    "themes": ["city", "sea"],
+    "budget": "low",
+    "seasons": ["spring", "autumn"],
+    "summary": "적산가옥과 세발낙지. 조용한 항구 도시.",
+    "emoji": "🚢"
+  },
+  {
+    "id": "dst-jeonju",
+    "name": "전주 한옥마을",
+    "region": "전북",
+    "themes": ["city", "healing"],
+    "budget": "mid",
+    "seasons": ["spring", "autumn", "winter"],
+    "summary": "기와 지붕과 비빔밥. 한복 입고 골목 걷기.",
+    "emoji": "🏘️"
+  },
+  {
+    "id": "dst-gunsan",
+    "name": "군산 시간여행마을",
+    "region": "전북",
+    "themes": ["city"],
+    "budget": "low",
+    "seasons": ["spring", "autumn"],
+    "summary": "일제강점기 건물과 오래된 빵집.",
+    "emoji": "🥐"
+  },
+  {
+    "id": "dst-namwon",
+    "name": "남원 광한루원",
+    "region": "전북",
+    "themes": ["healing", "city"],
+    "budget": "low",
+    "seasons": ["spring", "summer"],
+    "summary": "춘향전의 무대. 연못과 누각.",
+    "emoji": "🏮"
+  },
+  {
+    "id": "dst-gyeongju",
+    "name": "경주 황리단길",
+    "region": "경북",
+    "themes": ["city", "healing"],
+    "budget": "mid",
+    "seasons": ["spring", "autumn"],
+    "summary": "고분 옆 카페거리. 도시 전체가 박물관.",
+    "emoji": "⛩️"
+  },
+  {
+    "id": "dst-andong",
+    "name": "안동 하회마을",
+    "region": "경북",
+    "themes": ["healing"],
+    "budget": "low",
+    "seasons": ["autumn"],
+    "summary": "강이 감아 도는 마을. 찜닭은 시내에서.",
+    "emoji": "🎭"
+  },
+  {
+    "id": "dst-pohang",
+    "name": "포항 호미곶",
+    "region": "경북",
+    "themes": ["sea"],
+    "budget": "low",
+    "seasons": ["winter"],
+    "summary": "바다에서 솟은 손. 새해 일출 명소.",
+    "emoji": "🤚"
+  },
+  {
+    "id": "dst-yeongdeok",
+    "name": "영덕 강구항",
+    "region": "경북",
+    "themes": ["sea"],
+    "budget": "high",
+    "seasons": ["winter"],
+    "summary": "대게 철에 가야 의미가 있다.",
+    "emoji": "🦀"
+  },
+  {
+    "id": "dst-tongyeong",
+    "name": "통영 동피랑마을",
+    "region": "경남",
+    "themes": ["sea", "city"],
+    "budget": "mid",
+    "seasons": ["spring", "autumn"],
+    "summary": "벽화 골목과 충무김밥. 언덕이 가파르다.",
+    "emoji": "🎨"
+  },
+  {
+    "id": "dst-geoje",
+    "name": "거제 바람의언덕",
+    "region": "경남",
+    "themes": ["sea", "healing"],
+    "budget": "mid",
+    "seasons": ["spring", "summer", "autumn"],
+    "summary": "억새와 남해 전망. 이름값 하는 바람.",
+    "emoji": "🌬️"
+  },
+  {
+    "id": "dst-namhae",
+    "name": "남해 독일마을",
+    "region": "경남",
+    "themes": ["sea", "healing"],
+    "budget": "mid",
+    "seasons": ["spring", "autumn"],
+    "summary": "빨간 지붕과 바다. 맥주 마시기 좋은 언덕.",
+    "emoji": "🍺"
+  },
+  {
+    "id": "dst-hapcheon",
+    "name": "합천 해인사",
+    "region": "경남",
+    "themes": ["mountain", "healing"],
+    "budget": "low",
+    "seasons": ["autumn"],
+    "summary": "팔만대장경과 가야산. 템플스테이 가능.",
+    "emoji": "🛕"
+  },
+  {
+    "id": "dst-jirisan",
+    "name": "지리산 노고단",
+    "region": "경남",
+    "themes": ["mountain", "activity"],
+    "budget": "low",
+    "seasons": ["summer", "autumn"],
+    "summary": "능선 종주의 시작점. 대피소 예약 전쟁.",
+    "emoji": "🥾"
+  },
+  {
+    "id": "dst-seoul-seongsu",
+    "name": "서울 성수동",
+    "region": "서울",
+    "themes": ["city"],
+    "budget": "high",
+    "seasons": ["spring", "summer", "autumn", "winter"],
+    "summary": "공장 개조 카페와 팝업스토어. 주말엔 인파.",
+    "emoji": "🏭"
+  },
+  {
+    "id": "dst-seoul-bukchon",
+    "name": "서울 북촌한옥마을",
+    "region": "서울",
+    "themes": ["city", "healing"],
+    "budget": "mid",
+    "seasons": ["spring", "autumn"],
+    "summary": "골목과 기와. 주민이 사는 곳이니 조용히.",
+    "emoji": "🏡"
+  },
+  {
+    "id": "dst-incheon-ganghwa",
+    "name": "인천 강화도",
+    "region": "인천",
+    "themes": ["sea", "healing"],
+    "budget": "low",
+    "seasons": ["spring", "autumn"],
+    "summary": "갯벌과 산성. 서울에서 차로 한 시간.",
+    "emoji": "🦪"
+  },
+  {
+    "id": "dst-taean",
+    "name": "태안 신두리 해안사구",
+    "region": "충남",
+    "themes": ["sea", "healing"],
+    "budget": "low",
+    "seasons": ["spring", "autumn"],
+    "summary": "모래 언덕이 이어지는 국내 유일 사구.",
+    "emoji": "🏜️"
+  },
+  {
+    "id": "dst-danyang",
+    "name": "단양 도담삼봉",
+    "region": "충북",
+    "themes": ["mountain", "activity"],
+    "budget": "mid",
+    "seasons": ["summer", "autumn"],
+    "summary": "패러글라이딩과 강 위 세 봉우리. 마늘 요리도 유명.",
+    "emoji": "🪂"
+  },
+  {
+    "id": "dst-boryeong",
+    "name": "보령 대천해수욕장",
+    "region": "충남",
+    "themes": ["sea", "activity"],
+    "budget": "mid",
+    "seasons": ["summer"],
+    "summary": "머드축제. 깨끗하게 다녀올 생각은 접자.",
+    "emoji": "💦"
+  },
+  {
+    "id": "dst-ulleungdo",
+    "name": "울릉도",
+    "region": "경북",
+    "themes": ["sea", "mountain", "activity"],
+    "budget": "high",
+    "seasons": ["summer", "autumn"],
+    "summary": "배로 3시간. 파도가 높으면 못 나온다.",
+    "emoji": "⛵"
+  }
+]

@@ -1,0 +1,7 @@
+.next
+node_modules
+pnpm-lock.yaml
+.bkit
+
+# 손으로 쓴 문서는 Prettier가 건드리지 않는다. 표 정렬·줄바꿈은 글쓴이 몫이다.
+*.md

@@ -1,0 +1,97 @@
+import Link from 'next/link'
+import {
+  ArrowRightIcon,
+  ShuffleIcon,
+  SuitcaseRollingIcon,
+} from '@phosphor-icons/react/dist/ssr'
+import { actionButtonClass } from '@/components/dashboard/ActionButton'
+import { EmptyState } from '@/components/dashboard/EmptyState'
+import { TripCard } from '@/components/dashboard/TripCard'
+import { parseDataState, profileRepo, tripRepo } from '@/lib/data'
+import type { PageProps } from '@/lib/types/page'
+
+export default async function HomePage({ searchParams }: PageProps) {
+  const { state } = await searchParams
+  const opts = { state: parseDataState(state) }
+
+  const [me, trips] = await Promise.all([
+    profileRepo.me(opts),
+    tripRepo.list(opts),
+  ])
+  const membersByTrip = await Promise.all(
+    trips.map((trip) => profileRepo.listByTrip(trip.id)),
+  )
+  const today = new Date()
+
+  return (
+    <div className="flex flex-col gap-8">
+      <section>
+        <p className="text-muted font-mono text-xs tracking-widest">
+          안녕 {me.nickname}
+        </p>
+        <h1 className="font-display mt-1 text-3xl font-semibold tracking-tight">
+          어디 갈지 못 정했으면
+        </h1>
+        <Link
+          href="/random"
+          className="rounded-card bg-lime shadow-soft hover:shadow-lift mt-4 flex items-center justify-between p-6 transition duration-300 ease-out hover:-translate-y-[3px]"
+        >
+          <span>
+            <span className="font-display block text-2xl font-semibold tracking-tight">
+              여행지 뽑기
+            </span>
+            <span className="mt-1 block text-sm opacity-70">
+              다트 던지거나, 태그 고르고 운에 맡기기
+            </span>
+          </span>
+          <span className="bg-ink text-paper rounded-full p-3">
+            <ShuffleIcon size={22} weight="bold" aria-hidden />
+          </span>
+        </Link>
+      </section>
+
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Link href="/trips/new" className={actionButtonClass({ tone: 'ink' })}>
+          여행방 만들기
+        </Link>
+        <Link href="/join" className={actionButtonClass({ tone: 'quiet' })}>
+          초대코드로 참여
+          <ArrowRightIcon size={16} weight="bold" aria-hidden />
+        </Link>
+      </section>
+
+      <section>
+        <h2 className="font-display mb-3 text-lg font-semibold tracking-tight">
+          내 여행방
+        </h2>
+        {trips.length === 0 ? (
+          <EmptyState
+            icon={SuitcaseRollingIcon}
+            title="아직 여행방이 없습니다"
+            description="방을 만들어 친구를 부르거나, 받은 초대코드로 들어가세요."
+            action={
+              <Link
+                href="/trips/new"
+                className={actionButtonClass({ size: 'sm' })}
+              >
+                여행방 만들기
+              </Link>
+            }
+          />
+        ) : (
+          <ul className="flex flex-col gap-4">
+            {trips.map((trip, i) => (
+              <TripCard
+                key={trip.id}
+                trip={trip}
+                members={membersByTrip[i]}
+                today={today}
+                index={i}
+              />
+            ))}
+          </ul>
+        )}
+      </section>
+    </div>
+  )
+}

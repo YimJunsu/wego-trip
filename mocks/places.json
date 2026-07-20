@@ -1,0 +1,101 @@
+[
+  {
+    "id": "plc-1",
+    "name": "안목해변 커피거리 1호점",
+    "category": "카페",
+    "lat": 37.7735,
+    "lng": 128.9471,
+    "isChakan": false,
+    "savedToTripId": "trp-gangneung"
+  },
+  {
+    "id": "plc-2",
+    "name": "초당순두부 원조집",
+    "category": "한식",
+    "lat": 37.7952,
+    "lng": 128.9128,
+    "isChakan": true,
+    "savedToTripId": "trp-gangneung"
+  },
+  {
+    "id": "plc-3",
+    "name": "주문진 회센터",
+    "category": "횟집",
+    "lat": 37.8942,
+    "lng": 128.8298,
+    "isChakan": false,
+    "savedToTripId": "trp-gangneung"
+  },
+  {
+    "id": "plc-4",
+    "name": "강릉중앙시장 닭강정",
+    "category": "분식",
+    "lat": 37.7554,
+    "lng": 128.8967,
+    "isChakan": true
+  },
+  {
+    "id": "plc-5",
+    "name": "교동반점",
+    "category": "중식",
+    "lat": 37.7682,
+    "lng": 128.8891,
+    "isChakan": false
+  },
+  {
+    "id": "plc-6",
+    "name": "옥천동 백반집",
+    "category": "백반",
+    "lat": 37.7521,
+    "lng": 128.9012,
+    "isChakan": true
+  },
+  {
+    "id": "plc-7",
+    "name": "경포호 국수집",
+    "category": "국수",
+    "lat": 37.7955,
+    "lng": 128.9017,
+    "isChakan": true
+  },
+  {
+    "id": "plc-8",
+    "name": "강문해변 브런치",
+    "category": "양식",
+    "lat": 37.7911,
+    "lng": 128.9214,
+    "isChakan": false
+  },
+  {
+    "id": "plc-9",
+    "name": "사천진리 물회",
+    "category": "횟집",
+    "lat": 37.8298,
+    "lng": 128.8791,
+    "isChakan": false
+  },
+  {
+    "id": "plc-10",
+    "name": "포남동 감자옹심이",
+    "category": "한식",
+    "lat": 37.7639,
+    "lng": 128.9105,
+    "isChakan": true
+  },
+  {
+    "id": "plc-11",
+    "name": "정동진 해맞이 카페",
+    "category": "카페",
+    "lat": 37.6906,
+    "lng": 129.0335,
+    "isChakan": false
+  },
+  {
+    "id": "plc-12",
+    "name": "노암동 곱창골목",
+    "category": "고기",
+    "lat": 37.7488,
+    "lng": 128.8952,
+    "isChakan": false
+  }
+]

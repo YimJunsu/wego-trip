@@ -1,0 +1,58 @@
+[
+  {
+    "tripId": "trp-gangneung",
+    "userId": "usr-1",
+    "role": "host",
+    "isDriver": true
+  },
+  {
+    "tripId": "trp-gangneung",
+    "userId": "usr-2",
+    "role": "member",
+    "isDriver": false
+  },
+  {
+    "tripId": "trp-gangneung",
+    "userId": "usr-3",
+    "role": "member",
+    "isDriver": false
+  },
+  {
+    "tripId": "trp-gangneung",
+    "userId": "usr-4",
+    "role": "member",
+    "isDriver": false
+  },
+
+  {
+    "tripId": "trp-jeju",
+    "userId": "usr-2",
+    "role": "host",
+    "isDriver": false
+  },
+  {
+    "tripId": "trp-jeju",
+    "userId": "usr-1",
+    "role": "member",
+    "isDriver": false
+  },
+  {
+    "tripId": "trp-jeju",
+    "userId": "usr-5",
+    "role": "member",
+    "isDriver": true
+  },
+
+  {
+    "tripId": "trp-gyeongju",
+    "userId": "usr-1",
+    "role": "host",
+    "isDriver": true
+  },
+  {
+    "tripId": "trp-gyeongju",
+    "userId": "usr-3",
+    "role": "member",
+    "isDriver": false
+  }
+]

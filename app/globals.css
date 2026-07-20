@@ -1,26 +1,81 @@
-@import "tailwindcss";
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css');
+@import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 토큰의 원본은 DESIGN_SYSTEM.md §1. 값을 바꾸려면 그 문서를 먼저 고친다. */
+@theme {
+  --color-ink: #101010;
+  --color-muted: #6f6f68;
+  --color-paper: #f4f4ef;
+  --color-surface: #ffffff;
+  --color-line: #e6e6df;
+
+  /* 강조색은 라임 하나뿐이다. 색을 늘리고 싶으면 명도·여백으로 먼저 풀어 본다. */
+  --color-lime: #dcfb53;
+  --color-lime-soft: #eefcae;
+
+  /* 기능색. 강조색이 아니라 상태를 알리는 용도로만 쓴다. */
+  --color-danger: #c8372d;
+
+  --color-pass-navy: #1b2a4a;
+  --color-pass-cream: #f3ecdd;
+  --color-pass-stamp: #c1440e;
+  --color-pass-line: #9b8f76;
+
+  --radius-card: 1.75rem;
+  --radius-inner: 1.25rem;
+  --radius-pass: 14px;
+
+  /* 넓게 퍼지는 옅은 그림자. 카드를 띄우되 존재를 드러내지 않는다. */
+  --shadow-soft: 0 18px 40px -18px rgba(16, 16, 16, 0.14);
+  --shadow-lift: 0 24px 50px -18px rgba(16, 16, 16, 0.2);
+
+  --font-display: var(--font-outfit), sans-serif;
+  --font-body: 'Pretendard Variable', sans-serif;
+  --font-mono: var(--font-space-mono), monospace;
+
+  /* 참여 확정 시 도장이 쿵 찍히는 연출. (DESIGN_SYSTEM §5) */
+  --animate-stamp: stamp 280ms cubic-bezier(0.2, 0, 0.2, 1) forwards;
+  /* 목록·그리드가 순서대로 올라오는 등장. index를 --i로 넘겨 지연을 준다. */
+  --animate-rise: rise 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes stamp {
+  from {
+    transform: rotate(-8deg) scale(2.6);
+    opacity: 0;
+  }
+  to {
+    transform: rotate(-8deg) scale(1);
+    opacity: 0.85;
+  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes rise {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-paper text-ink font-body;
+}
+
+/* 접근성: 포커스 링 유지. (DESIGN_SYSTEM §4) */
+:focus-visible {
+  @apply outline-ink rounded-sm outline-2 outline-offset-2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
