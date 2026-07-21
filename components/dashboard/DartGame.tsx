@@ -260,11 +260,7 @@ export function DartGame({ initialWind }: { initialWind: Wind }) {
       target = { x: chosen.anchor[0], y: chosen.anchor[1] }
     } else {
       bowWind = wind
-      const raw = resolveLanding(
-        HOME,
-        finalPull,
-        wind ?? { angle: 0, strength: 0 },
-      )
+      const raw = resolveLanding(HOME, finalPull, wind)
       target = {
         x: Math.min(Math.max(raw.x, 12), W - 12),
         y: Math.min(Math.max(raw.y, 12), H - 60),
@@ -304,7 +300,7 @@ export function DartGame({ initialWind }: { initialWind: Wind }) {
             onToggle={() => reset('blind')}
           />
         </div>
-        {mode === 'aim' && wind ? (
+        {mode === 'aim' ? (
           <WindGauge wind={wind} />
         ) : (
           <p className="text-muted font-mono text-xs tracking-widest">
