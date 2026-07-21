@@ -16,13 +16,13 @@ export function SettlePanel({
   profiles,
   initialExpenses,
   settlements,
-  driverNickname,
+  driverName,
 }: {
   tripId: string
   profiles: Profile[]
   initialExpenses: Expense[]
   settlements: Settlement[]
-  driverNickname?: string
+  driverName?: string
 }) {
   const [expenses, setExpenses] = useState(initialExpenses)
   const [isAdding, setIsAdding] = useState(false)
@@ -36,7 +36,10 @@ export function SettlePanel({
           <p className="font-mono text-xs tracking-widest opacity-60">
             총 지출
           </p>
-          <AvatarStack people={profiles} label="함께 쓴 사람" />
+          <AvatarStack
+            people={profiles.map((p) => ({ id: p.id, name: p.name }))}
+            label="함께 쓴 사람"
+          />
         </div>
         <p className="font-display mt-2 text-4xl font-semibold tracking-tight">
           {formatWon(total)}
@@ -44,9 +47,9 @@ export function SettlePanel({
         <div className="mt-4 flex flex-wrap gap-1.5">
           <Badge className="bg-ink/8 text-ink">{expenses.length}건</Badge>
           <Badge className="bg-ink/8 text-ink">{profiles.length}명</Badge>
-          {driverNickname ? (
+          {driverName ? (
             <Badge className="bg-ink text-paper">
-              운전자 {driverNickname} 20% 할인
+              운전자 {driverName} 20% 할인
             </Badge>
           ) : null}
         </div>

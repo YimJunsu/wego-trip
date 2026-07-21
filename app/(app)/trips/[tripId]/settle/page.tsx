@@ -30,7 +30,7 @@ export default async function SettlePage({
   ])
 
   const driverId = members.find((m) => m.isDriver)?.userId
-  const driverNickname = profiles.find((p) => p.id === driverId)?.nickname
+  const driverName = profiles.find((p) => p.id === driverId)?.name
 
   return (
     <div className="flex flex-col gap-6">
@@ -52,7 +52,7 @@ export default async function SettlePage({
         profiles={profiles}
         initialExpenses={expenses}
         settlements={settlements}
-        driverNickname={driverNickname}
+        driverName={driverName}
       />
     </div>
   )

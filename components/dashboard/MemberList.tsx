@@ -18,9 +18,9 @@ export function MemberList({
         if (!profile) return null
         return (
           <li key={member.userId} className="flex items-center gap-3 py-4">
-            <Avatar name={profile.nickname} src={profile.avatarUrl} size="lg" />
+            <Avatar name={profile.name} size="lg" />
             <span className="font-display flex-1 font-medium">
-              {profile.nickname}
+              {profile.name}
             </span>
             <span className="flex gap-1.5">
               {member.role === 'host' ? (

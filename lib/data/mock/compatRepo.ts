@@ -2,7 +2,7 @@ import questionSeed from '@/mocks/quiz.json'
 import resultSeed from '@/mocks/compat.json'
 import type { CompatRepository } from '../repositories'
 import type { CompatAxisBreakdown, CompatResult, QuizQuestion } from '../types'
-import { findProfile } from './profileRepo'
+import { findProfile } from './authRepo'
 import { resolve } from './state'
 
 const questions = questionSeed as QuizQuestion[]

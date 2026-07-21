@@ -35,17 +35,14 @@ export function SettlementList({
             style={{ animationDelay: `${i * 70}ms` }}
             className="rounded-card border-line bg-surface animate-rise flex items-center gap-3 border p-4"
           >
-            <Person
-              name={from?.nickname ?? '알 수 없음'}
-              src={from?.avatarUrl}
-            />
+            <Person name={from?.name ?? '알 수 없음'} />
             <ArrowRightIcon
               size={16}
               weight="bold"
               className="text-muted shrink-0"
               aria-label="에게 보냄"
             />
-            <Person name={to?.nickname ?? '알 수 없음'} src={to?.avatarUrl} />
+            <Person name={to?.name ?? '알 수 없음'} />
             <span className="ml-auto font-mono font-semibold">
               {formatWon(s.amount)}
             </span>
@@ -56,10 +53,10 @@ export function SettlementList({
   )
 }
 
-function Person({ name, src }: { name: string; src?: string }) {
+function Person({ name }: { name: string }) {
   return (
     <span className="flex items-center gap-2">
-      <Avatar name={name} src={src} size="sm" />
+      <Avatar name={name} size="sm" />
       <span className="font-medium">{name}</span>
     </span>
   )

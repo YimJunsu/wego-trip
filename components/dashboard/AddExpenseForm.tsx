@@ -81,7 +81,7 @@ export function AddExpenseForm({
         {profiles.map((p) => (
           <FilterChip
             key={p.id}
-            label={p.nickname}
+            label={p.name}
             isSelected={payerId === p.id}
             onToggle={() => setPayerId(p.id)}
           />
@@ -92,7 +92,7 @@ export function AddExpenseForm({
         {profiles.map((p) => (
           <FilterChip
             key={p.id}
-            label={p.nickname}
+            label={p.name}
             isSelected={participantIds.includes(p.id)}
             onToggle={() => toggleParticipant(p.id)}
           />

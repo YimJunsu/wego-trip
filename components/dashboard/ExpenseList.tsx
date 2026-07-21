@@ -28,13 +28,13 @@ export function ExpenseList({
         const payer = profiles.find((p) => p.id === expense.payerId)
         return (
           <li key={expense.id} className="flex items-center gap-3 py-4">
-            <Avatar name={payer?.nickname ?? '?'} src={payer?.avatarUrl} />
+            <Avatar name={payer?.name ?? '?'} />
             <div className="min-w-0 flex-1">
               <p className="font-display truncate font-medium">
                 {expense.description}
               </p>
               <p className="text-muted mt-0.5 text-xs">
-                {payer?.nickname} 결제 · {expense.participantIds.length}명 부담
+                {payer?.name} 결제 · {expense.participantIds.length}명 부담
               </p>
             </div>
             <div className="flex flex-col items-end gap-1">

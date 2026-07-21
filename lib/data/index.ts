@@ -1,3 +1,4 @@
+import { mockAuthRepo } from './mock/authRepo'
 import { mockCompatRepo } from './mock/compatRepo'
 import { mockDestinationRepo } from './mock/destinationRepo'
 import { mockExpenseRepo } from './mock/expenseRepo'
@@ -6,6 +7,7 @@ import { mockProfileRepo } from './mock/profileRepo'
 import { mockSettlementRepo } from './mock/settlementRepo'
 import { mockTripRepo } from './mock/tripRepo'
 import type {
+  AuthRepository,
   CompatRepository,
   DestinationRepository,
   ExpenseRepository,
@@ -24,6 +26,7 @@ import type {
  *   export const tripRepo: TripRepository =
  *     process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase' ? supabaseTripRepo : mockTripRepo
  */
+export const authRepo: AuthRepository = mockAuthRepo
 export const profileRepo: ProfileRepository = mockProfileRepo
 export const tripRepo: TripRepository = mockTripRepo
 export const expenseRepo: ExpenseRepository = mockExpenseRepo

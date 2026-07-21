@@ -27,7 +27,7 @@ export default async function HomePage({ searchParams }: PageProps) {
     <div className="flex flex-col gap-8">
       <section>
         <p className="text-muted font-mono text-xs tracking-widest">
-          안녕 {me.nickname}
+          안녕 {me.name}
         </p>
         <h1 className="font-display mt-1 text-3xl font-semibold tracking-tight">
           어디 갈지 못 정했으면

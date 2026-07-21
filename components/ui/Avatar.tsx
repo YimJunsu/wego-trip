@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { cn } from '@/lib/utils/cn'
 
 const SIZE = {
@@ -9,14 +8,13 @@ const SIZE = {
 
 type AvatarSize = keyof typeof SIZE
 
+/** 사진은 쓰지 않는다. 이름 첫 글자만 둔다. */
 export function Avatar({
   name,
-  src,
   size = 'md',
   className,
 }: {
   name: string
-  src?: string
   size?: AvatarSize
   className?: string
 }) {
@@ -30,19 +28,9 @@ export function Avatar({
         className,
       )}
     >
-      {src ? (
-        <Image
-          src={src}
-          alt=""
-          width={px}
-          height={px}
-          className="h-full w-full object-cover"
-        />
-      ) : (
-        <span className="font-display flex h-full w-full items-center justify-center text-xs font-semibold">
-          {name.slice(0, 1)}
-        </span>
-      )}
+      <span className="font-display flex h-full w-full items-center justify-center text-xs font-semibold">
+        {name.slice(0, 1)}
+      </span>
       <span className="sr-only">{name}</span>
     </span>
   )
@@ -54,7 +42,7 @@ export function AvatarStack({
   size = 'sm',
   label,
 }: {
-  people: { id: string; nickname: string; avatarUrl?: string }[]
+  people: { id: string; name: string }[]
   size?: AvatarSize
   label: string
 }) {
@@ -62,7 +50,7 @@ export function AvatarStack({
     <ul className="flex items-center -space-x-2" aria-label={label}>
       {people.map((person) => (
         <li key={person.id}>
-          <Avatar name={person.nickname} src={person.avatarUrl} size={size} />
+          <Avatar name={person.name} size={size} />
         </li>
       ))}
     </ul>

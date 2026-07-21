@@ -46,6 +46,26 @@ export interface ProfileRepository {
   listByTrip(tripId: string, opts?: QueryOptions): Promise<Profile[]>
 }
 
+export type SignUpInput = {
+  name: string
+  email: string
+  password: string
+  phone: string
+  birthDate: string
+}
+
+/**
+ * 인증. 자격증명(Account)은 이 인터페이스 밖으로 나가지 않는다 —
+ * 모든 메서드가 Profile만 반환한다.
+ */
+export interface AuthRepository {
+  /** 이미 쓰는 이메일이면 DuplicateEmailError를 던진다. */
+  signUp(input: SignUpInput): Promise<Profile>
+  /** 이메일·비밀번호가 맞지 않으면 InvalidCredentialsError를 던진다. */
+  signIn(email: string, password: string): Promise<Profile>
+  findById(id: string): Promise<Profile | null>
+}
+
 export interface TripRepository {
   list(opts?: QueryOptions): Promise<Trip[]>
   get(id: string, opts?: QueryOptions): Promise<Trip | null>

@@ -51,7 +51,10 @@ export function TripCard({
         </p>
 
         <div className="border-line mt-5 flex items-center justify-between gap-3 border-t pt-4">
-          <AvatarStack people={members} label="멤버" />
+          <AvatarStack
+            people={members.map((m) => ({ id: m.id, name: m.name }))}
+            label="멤버"
+          />
           <span className="flex items-center gap-2">
             <ThemeBadge theme={trip.coverTheme} />
             <ArrowUpRightIcon size={18} weight="bold" className="text-muted" />

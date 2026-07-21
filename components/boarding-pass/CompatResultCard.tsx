@@ -53,8 +53,8 @@ export function CompatResultCard({ result }: { result: CompatResult }) {
 function Person({ profile }: { profile: Profile }) {
   return (
     <span className="flex items-center gap-1.5">
-      <Avatar name={profile.nickname} src={profile.avatarUrl} size="sm" />
-      {profile.nickname}
+      <Avatar name={profile.name} size="sm" />
+      {profile.name}
     </span>
   )
 }
