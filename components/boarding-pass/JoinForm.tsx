@@ -8,7 +8,7 @@ import {
 } from '@/components/boarding-pass/InviteCodeInput'
 import { PassButton } from '@/components/boarding-pass/PassButton'
 import { TripPass } from '@/components/boarding-pass/TripPass'
-import { tripRepo } from '@/lib/data'
+import { joinTripByCode } from '@/lib/trips/actions'
 import type { Trip } from '@/lib/data/types'
 
 type Phase = 'idle' | 'submitting' | 'joined'
@@ -24,7 +24,7 @@ export function JoinForm() {
     setPhase('submitting')
     setError(undefined)
     try {
-      setTrip(await tripRepo.joinByCode(code))
+      setTrip(await joinTripByCode(code))
       setPhase('joined')
     } catch {
       setError('그런 코드는 없습니다. 방장에게 다시 물어보세요.')

@@ -7,7 +7,7 @@ import { EmptyState } from '@/components/dashboard/EmptyState'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { MapPlaceholder } from '@/components/dashboard/MapPlaceholder'
 import { Badge } from '@/components/ui/Badge'
-import { placeRepo } from '@/lib/data'
+import { toggleSavedPlace } from '@/lib/places/actions'
 import type { Place } from '@/lib/data/types'
 
 export function PlacesPanel({
@@ -24,7 +24,7 @@ export function PlacesPanel({
   const savedCount = places.filter((p) => p.savedToTripId === tripId).length
 
   async function toggleSave(placeId: string) {
-    const updated = await placeRepo.toggleSave(placeId, tripId)
+    const updated = await toggleSavedPlace(placeId, tripId)
     setPlaces((prev) =>
       prev.map((p) => (p.id === updated.id ? { ...updated } : p)),
     )

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { ActionButton } from '@/components/dashboard/ActionButton'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { TextField } from '@/components/dashboard/TextField'
-import { expenseRepo } from '@/lib/data'
+import { addExpense } from '@/lib/expenses/actions'
 import type { Expense, Member } from '@/lib/data/types'
 
 const CATEGORIES = ['교통', '숙박', '식비', '카페', '간식', '기타'] as const
@@ -45,7 +45,7 @@ export function AddExpenseForm({
 
     setError(undefined)
     onAdded(
-      await expenseRepo.add({
+      await addExpense({
         tripId,
         payerId,
         amount: Math.round(won),

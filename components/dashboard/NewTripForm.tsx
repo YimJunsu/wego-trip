@@ -8,7 +8,7 @@ import {
 } from '@/components/dashboard/ActionButton'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { TextField } from '@/components/dashboard/TextField'
-import { tripRepo } from '@/lib/data'
+import { createTrip } from '@/lib/trips/actions'
 import type { DestinationTheme, Trip } from '@/lib/data/types'
 import { formatDateRange } from '@/lib/utils/format'
 import { THEME_LABEL, THEME_ORDER } from '@/lib/utils/labels'
@@ -47,7 +47,7 @@ export function NewTripForm() {
 
     setIsSubmitting(true)
     setCreated(
-      await tripRepo.create({ name, region, startDate, endDate, coverTheme }),
+      await createTrip({ name, region, startDate, endDate, coverTheme }),
     )
     setIsSubmitting(false)
   }
