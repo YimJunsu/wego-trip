@@ -2,11 +2,13 @@ import seed from '@/mocks/trips.json'
 import memberSeed from '@/mocks/members.json'
 import type { TripRepository } from '../repositories'
 import type { Member, Trip } from '../types'
-import { CURRENT_USER_ID } from './profileRepo'
 import { resolve } from './state'
 
 const trips = [...(seed as Trip[])]
 const members = [...(memberSeed as Member[])]
+
+/** ponytail: 세션 연결 전까지의 임시값. Task 7에서 인자로 대체된다. */
+const CURRENT_USER_ID = 'usr-1'
 
 const INVITE_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 const INVITE_CODE_LENGTH = 6
@@ -47,6 +49,8 @@ export const mockTripRepo: TripRepository = {
     members.push({
       tripId: trip.id,
       userId: CURRENT_USER_ID,
+      // ponytail: Task 7에서 로그인 사용자의 이름으로 대체된다.
+      displayName: '나',
       role: 'host',
       isDriver: false,
     })

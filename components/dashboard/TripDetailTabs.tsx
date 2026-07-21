@@ -7,7 +7,7 @@ import { DayPlanList } from '@/components/dashboard/DayPlanList'
 import { MemberList } from '@/components/dashboard/MemberList'
 import { SettlementList } from '@/components/dashboard/SettlementList'
 import { TabBar } from '@/components/dashboard/TabBar'
-import type { Member, Profile, Settlement, Trip } from '@/lib/data/types'
+import type { Member, Settlement, Trip } from '@/lib/data/types'
 
 type Tab = 'members' | 'plan' | 'settle'
 
@@ -20,12 +20,10 @@ const TABS = [
 export function TripDetailTabs({
   trip,
   members,
-  profiles,
   settlements,
 }: {
   trip: Trip
   members: Member[]
-  profiles: Profile[]
   settlements: Settlement[]
 }) {
   const [tab, setTab] = useState<Tab>('members')
@@ -36,12 +34,12 @@ export function TripDetailTabs({
 
       <div role="tabpanel">
         {tab === 'members' ? (
-          <MemberList members={members} profiles={profiles} />
+          <MemberList members={members} />
         ) : tab === 'plan' ? (
           <DayPlanList trip={trip} />
         ) : (
           <div className="flex flex-col gap-4">
-            <SettlementList settlements={settlements} profiles={profiles} />
+            <SettlementList settlements={settlements} members={members} />
             <Link
               href={`/trips/${trip.id}/settle`}
               className={actionButtonClass({

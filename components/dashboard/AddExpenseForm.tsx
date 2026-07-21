@@ -5,26 +5,26 @@ import { ActionButton } from '@/components/dashboard/ActionButton'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { TextField } from '@/components/dashboard/TextField'
 import { expenseRepo } from '@/lib/data'
-import type { Expense, Profile } from '@/lib/data/types'
+import type { Expense, Member } from '@/lib/data/types'
 
 const CATEGORIES = ['교통', '숙박', '식비', '카페', '간식', '기타'] as const
 
 export function AddExpenseForm({
   tripId,
-  profiles,
+  members,
   onAdded,
   onCancel,
 }: {
   tripId: string
-  profiles: Profile[]
+  members: Member[]
   onAdded: (expense: Expense) => void
   onCancel: () => void
 }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
-  const [payerId, setPayerId] = useState(profiles[0]?.id ?? '')
+  const [payerId, setPayerId] = useState(members[0]?.userId ?? '')
   const [participantIds, setParticipantIds] = useState(
-    profiles.map((p) => p.id),
+    members.map((m) => m.userId),
   )
   const [category, setCategory] = useState<string>(CATEGORIES[0])
   const [error, setError] = useState<string>()
@@ -78,23 +78,23 @@ export function AddExpenseForm({
       />
 
       <ChipGroup label="결제한 사람">
-        {profiles.map((p) => (
+        {members.map((m) => (
           <FilterChip
-            key={p.id}
-            label={p.name}
-            isSelected={payerId === p.id}
-            onToggle={() => setPayerId(p.id)}
+            key={m.userId}
+            label={m.displayName}
+            isSelected={payerId === m.userId}
+            onToggle={() => setPayerId(m.userId)}
           />
         ))}
       </ChipGroup>
 
       <ChipGroup label="나눠 낼 사람">
-        {profiles.map((p) => (
+        {members.map((m) => (
           <FilterChip
-            key={p.id}
-            label={p.name}
-            isSelected={participantIds.includes(p.id)}
-            onToggle={() => toggleParticipant(p.id)}
+            key={m.userId}
+            label={m.displayName}
+            isSelected={participantIds.includes(m.userId)}
+            onToggle={() => toggleParticipant(m.userId)}
           />
         ))}
       </ChipGroup>

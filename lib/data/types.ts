@@ -47,6 +47,8 @@ export type Trip = {
 export type Member = {
   tripId: string
   userId: string
+  /** 이 여행방에서 쓰는 이름. 참여 시 기본값은 Profile.name이다. */
+  displayName: string
   role: 'host' | 'member'
   isDriver: boolean
 }

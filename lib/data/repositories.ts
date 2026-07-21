@@ -41,11 +41,6 @@ export type AddExpenseInput = {
   participantIds: string[]
 }
 
-export interface ProfileRepository {
-  me(opts?: QueryOptions): Promise<Profile>
-  listByTrip(tripId: string, opts?: QueryOptions): Promise<Profile[]>
-}
-
 export type SignUpInput = {
   name: string
   email: string

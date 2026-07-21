@@ -7,28 +7,23 @@ import {
 import { actionButtonClass } from '@/components/dashboard/ActionButton'
 import { EmptyState } from '@/components/dashboard/EmptyState'
 import { TripCard } from '@/components/dashboard/TripCard'
-import { parseDataState, profileRepo, tripRepo } from '@/lib/data'
+import { parseDataState, tripRepo } from '@/lib/data'
 import type { PageProps } from '@/lib/types/page'
 
 export default async function HomePage({ searchParams }: PageProps) {
   const { state } = await searchParams
   const opts = { state: parseDataState(state) }
 
-  const [me, trips] = await Promise.all([
-    profileRepo.me(opts),
-    tripRepo.list(opts),
-  ])
+  const trips = await tripRepo.list(opts)
   const membersByTrip = await Promise.all(
-    trips.map((trip) => profileRepo.listByTrip(trip.id)),
+    trips.map((trip) => tripRepo.listMembers(trip.id)),
   )
   const today = new Date()
 
   return (
     <div className="flex flex-col gap-8">
       <section>
-        <p className="text-muted font-mono text-xs tracking-widest">
-          안녕 {me.name}
-        </p>
+        <p className="text-muted font-mono text-xs tracking-widest">안녕</p>
         <h1 className="font-display mt-1 text-3xl font-semibold tracking-tight">
           어디 갈지 못 정했으면
         </h1>

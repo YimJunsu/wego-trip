@@ -2,15 +2,15 @@ import { ReceiptIcon } from '@phosphor-icons/react/dist/ssr'
 import { EmptyState } from '@/components/dashboard/EmptyState'
 import { Avatar } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
-import type { Expense, Profile } from '@/lib/data/types'
+import type { Expense, Member } from '@/lib/data/types'
 import { formatWon } from '@/lib/utils/format'
 
 export function ExpenseList({
   expenses,
-  profiles,
+  members,
 }: {
   expenses: Expense[]
-  profiles: Profile[]
+  members: Member[]
 }) {
   if (expenses.length === 0) {
     return (
@@ -25,16 +25,17 @@ export function ExpenseList({
   return (
     <ul className="divide-line border-line bg-surface rounded-card divide-y border px-5">
       {expenses.map((expense) => {
-        const payer = profiles.find((p) => p.id === expense.payerId)
+        const payer = members.find((m) => m.userId === expense.payerId)
         return (
           <li key={expense.id} className="flex items-center gap-3 py-4">
-            <Avatar name={payer?.name ?? '?'} />
+            <Avatar name={payer?.displayName ?? '?'} />
             <div className="min-w-0 flex-1">
               <p className="font-display truncate font-medium">
                 {expense.description}
               </p>
               <p className="text-muted mt-0.5 text-xs">
-                {payer?.name} 결제 · {expense.participantIds.length}명 부담
+                {payer?.displayName} 결제 · {expense.participantIds.length}명
+                부담
               </p>
             </div>
             <div className="flex flex-col items-end gap-1">

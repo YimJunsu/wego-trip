@@ -5,7 +5,6 @@ import { SettlePanel } from '@/components/dashboard/SettlePanel'
 import {
   expenseRepo,
   parseDataState,
-  profileRepo,
   settlementRepo,
   tripRepo,
 } from '@/lib/data'
@@ -22,15 +21,13 @@ export default async function SettlePage({
   const trip = await tripRepo.get(tripId, opts)
   if (!trip) notFound()
 
-  const [expenses, profiles, settlements, members] = await Promise.all([
+  const [expenses, settlements, members] = await Promise.all([
     expenseRepo.listByTrip(tripId, opts),
-    profileRepo.listByTrip(tripId, opts),
     settlementRepo.listByTrip(tripId, opts),
     tripRepo.listMembers(tripId, opts),
   ])
 
-  const driverId = members.find((m) => m.isDriver)?.userId
-  const driverName = profiles.find((p) => p.id === driverId)?.name
+  const driverName = members.find((m) => m.isDriver)?.displayName
 
   return (
     <div className="flex flex-col gap-6">
@@ -49,7 +46,7 @@ export default async function SettlePage({
 
       <SettlePanel
         tripId={tripId}
-        profiles={profiles}
+        members={members}
         initialExpenses={expenses}
         settlements={settlements}
         driverName={driverName}

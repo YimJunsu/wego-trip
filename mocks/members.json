@@ -2,24 +2,28 @@
   {
     "tripId": "trp-gangneung",
     "userId": "usr-1",
+    "displayName": "임준수",
     "role": "host",
     "isDriver": true
   },
   {
     "tripId": "trp-gangneung",
     "userId": "usr-2",
+    "displayName": "박서준",
     "role": "member",
     "isDriver": false
   },
   {
     "tripId": "trp-gangneung",
     "userId": "usr-3",
+    "displayName": "김하늘",
     "role": "member",
     "isDriver": false
   },
   {
     "tripId": "trp-gangneung",
     "userId": "usr-4",
+    "displayName": "이도윤",
     "role": "member",
     "isDriver": false
   },
@@ -27,18 +31,21 @@
   {
     "tripId": "trp-jeju",
     "userId": "usr-2",
+    "displayName": "박서준",
     "role": "host",
     "isDriver": false
   },
   {
     "tripId": "trp-jeju",
     "userId": "usr-1",
+    "displayName": "임준수",
     "role": "member",
     "isDriver": false
   },
   {
     "tripId": "trp-jeju",
     "userId": "usr-5",
+    "displayName": "최지우",
     "role": "member",
     "isDriver": true
   },
@@ -46,12 +53,14 @@
   {
     "tripId": "trp-gyeongju",
     "userId": "usr-1",
+    "displayName": "임준수",
     "role": "host",
     "isDriver": true
   },
   {
     "tripId": "trp-gyeongju",
     "userId": "usr-3",
+    "displayName": "김하늘",
     "role": "member",
     "isDriver": false
   }

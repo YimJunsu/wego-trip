@@ -3,7 +3,7 @@ import { ArrowUpRightIcon } from '@phosphor-icons/react/dist/ssr'
 import { ThemeBadge } from '@/components/dashboard/ThemeBadge'
 import { AvatarStack } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
-import type { Profile, Trip } from '@/lib/data/types'
+import type { Member, Trip } from '@/lib/data/types'
 import { formatDateRange, formatDday, formatNights } from '@/lib/utils/format'
 
 export function TripCard({
@@ -13,7 +13,7 @@ export function TripCard({
   index = 0,
 }: {
   trip: Trip
-  members: Profile[]
+  members: Member[]
   today: Date
   /** 목록이 순서대로 올라오게 하는 지연값. */
   index?: number
@@ -52,7 +52,7 @@ export function TripCard({
 
         <div className="border-line mt-5 flex items-center justify-between gap-3 border-t pt-4">
           <AvatarStack
-            people={members.map((m) => ({ id: m.id, name: m.name }))}
+            people={members.map((m) => ({ id: m.userId, name: m.displayName }))}
             label="멤버"
           />
           <span className="flex items-center gap-2">
