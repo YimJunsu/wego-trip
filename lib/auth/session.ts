@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { authRepo } from '@/lib/data'
+import { authRepo, tripRepo } from '@/lib/data'
 import type { Profile } from '@/lib/data/types'
 
 /**
@@ -41,5 +41,20 @@ export async function getUser(): Promise<Profile | null> {
 export async function requireUser(): Promise<Profile> {
   const user = await getUser()
   if (!user) redirect('/login')
+  return user
+}
+
+/**
+ * Server Action은 페이지 게이트를 거치지 않고 id로 바로 호출될 수 있다(네트워크 레벨).
+ * 로그인만으로는 부족하다 — tripId에 속한 멤버인지까지 여기서 다시 확인해야
+ * 다른 사람의 여행방에 데이터를 쓰는 걸 막는다. 여행방 데이터를 바꾸는 모든 액션의
+ * 첫 줄에 둔다.
+ */
+export async function requireMember(tripId: string): Promise<Profile> {
+  const user = await requireUser()
+  const members = await tripRepo.listMembers(tripId)
+  if (!members.some((m) => m.userId === user.id)) {
+    throw new Error('이 여행방의 멤버가 아닙니다.')
+  }
   return user
 }
