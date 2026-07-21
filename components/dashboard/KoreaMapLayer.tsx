@@ -1,36 +1,18 @@
 import { koreaMap } from '@/lib/geo/koreaMap'
+import { terrainGrade, type TerrainGrade } from '@/lib/geo/terrain'
 import { cn } from '@/lib/utils/cn'
 
 /**
  * 시군구 지도 레이어. DartGame의 svg 안에서 쓴다.
- * 색은 늘리지 않고 먹색 명도 4단계로 시도를 구분한다. (DESIGN_SYSTEM §1)
- * 인접 시도끼리 같은 명도가 붙지 않도록 손으로 배정했다.
+ *
+ * 지형이 읽히도록 지도 전용 팔레트로 칠한다 — 바다·평야·구릉·산지.
+ * 이 팔레트는 지도 svg 안으로 범위가 한정된 예외다. (DESIGN_SYSTEM §6)
+ * 명중 지역만 라임이라 자연색 위에서 오히려 더 튄다.
  */
-const TINT = [
-  'fill-ink/5',
-  'fill-ink/9',
-  'fill-ink/14',
-  'fill-ink/20',
-] as const
-
-const PROVINCE_TINT: Record<string, number> = {
-  11: 0, // 서울
-  21: 3, // 부산
-  22: 0, // 대구
-  23: 0, // 인천
-  24: 0, // 광주
-  25: 0, // 대전
-  26: 0, // 울산
-  29: 2, // 세종
-  31: 2, // 경기
-  32: 1, // 강원
-  33: 3, // 충북
-  34: 1, // 충남
-  35: 0, // 전북
-  36: 2, // 전남
-  37: 2, // 경북
-  38: 1, // 경남
-  39: 1, // 제주
+const GRADE_FILL: Record<TerrainGrade, string> = {
+  low: 'fill-terrain-low',
+  mid: 'fill-terrain-mid',
+  high: 'fill-terrain-high',
 }
 
 export function KoreaMapLayer({
@@ -40,6 +22,24 @@ export function KoreaMapLayer({
 }) {
   return (
     <g>
+      {/* 바다. 아래로 갈수록 깊어져 다트가 대기하는 독이 먼바다로 읽힌다. */}
+      <defs>
+        <linearGradient id="terrain-sea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" className="[stop-color:var(--color-terrain-sea)]" />
+          <stop
+            offset="100%"
+            className="[stop-color:var(--color-terrain-sea-deep)]"
+          />
+        </linearGradient>
+      </defs>
+      <rect
+        x={0}
+        y={0}
+        width={koreaMap.width}
+        height={koreaMap.height}
+        fill="url(#terrain-sea)"
+      />
+
       {koreaMap.regions.map((region) => {
         const isHit = region.code === highlightCode
         return (
@@ -50,7 +50,7 @@ export function KoreaMapLayer({
               'stroke-surface transition-[fill] duration-300',
               isHit
                 ? 'fill-lime'
-                : TINT[PROVINCE_TINT[region.code.slice(0, 2)] ?? 0],
+                : GRADE_FILL[terrainGrade(region.province, region.name)],
             )}
             strokeWidth={1}
           />
@@ -67,13 +67,14 @@ export function KoreaMapLayer({
             height={inset.h}
             rx={10}
             strokeDasharray="4 4"
-            className="stroke-line fill-none"
+            // line 토큰은 바다색과 명도가 거의 같아 안 보인다. 먹색을 옅게 쓴다.
+            className="stroke-ink/25 fill-none"
           />
           <text
             x={inset.x + inset.w / 2}
             y={inset.y + inset.h + 14}
             textAnchor="middle"
-            className="fill-muted font-mono text-[11px]"
+            className="fill-ink/55 font-mono text-[11px]"
           >
             {inset.label}
           </text>
