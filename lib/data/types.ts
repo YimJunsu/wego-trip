@@ -80,6 +80,8 @@ export type Destination = {
 }
 
 export type DestinationFilter = {
+  /** 시도 단위 키('강원', '부산' …). PROVINCE_TO_REGION이 만든다. */
+  region?: string
   themes?: DestinationTheme[]
   budget?: BudgetLevel
   season?: Season
