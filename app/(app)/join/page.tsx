@@ -1,7 +1,10 @@
 import { JoinForm } from '@/components/boarding-pass/JoinForm'
 import { tripRepo } from '@/lib/data'
+import { requireUser } from '@/lib/auth/session'
 
 export default async function JoinPage() {
+  await requireUser()
+
   /** mock에서만 보여 주는 힌트. 실제 코드는 친구가 불러 준다. */
   const trips = await tripRepo.list()
 

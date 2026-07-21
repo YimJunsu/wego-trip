@@ -8,12 +8,15 @@ import {
   settlementRepo,
   tripRepo,
 } from '@/lib/data'
+import { requireUser } from '@/lib/auth/session'
 import type { PageProps } from '@/lib/types/page'
 
 export default async function SettlePage({
   params,
   searchParams,
 }: PageProps<{ tripId: string }>) {
+  await requireUser()
+
   const { tripId } = await params
   const { state } = await searchParams
   const opts = { state: parseDataState(state) }
