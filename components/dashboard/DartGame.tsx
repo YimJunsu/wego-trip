@@ -17,14 +17,18 @@ import type { Destination } from '@/lib/data/types'
 import { isNorthOfMdl } from '@/lib/geo/dmz'
 import { PROVINCE_TO_REGION } from '@/lib/utils/labels'
 import {
+  aimDirectionPoint,
   clampPull,
   easeOutCubic,
   FLIGHT_MS,
   flightAngle,
-  landingPoint,
   MIN_POWER,
+  resolveLanding,
+  rollWind,
   throwPower,
+  windBow,
   type Vec,
+  type Wind,
 } from '@/lib/geo/dart'
 import {
   koreaMap,
@@ -53,7 +57,11 @@ const HOME: Vec = { x: W / 2, y: H - DOCK / 2 }
 const GRAB_RADIUS = 120
 const RING_R = 64
 
-export function DartGame() {
+/**
+ * 첫 바람은 서버에서 굴려 prop으로 받는다. 클라이언트에서 굴리면 서버 렌더 결과와
+ * 어긋나 hydration이 깨진다. 이후 판의 바람은 reset()이 굴린다.
+ */
+export function DartGame({ initialWind }: { initialWind: Wind }) {
   const [mode, setMode] = useState<Mode>('aim')
   const [phase, setPhase] = useState<Phase>('ready')
   const [pull, setPull] = useState<Vec>({ x: 0, y: 0 })
@@ -62,6 +70,7 @@ export function DartGame() {
   const [destination, setDestination] = useState<DestinationState>({
     status: 'idle',
   })
+  const [wind, setWind] = useState<Wind>(initialWind)
 
   const svgRef = useRef<SVGSVGElement>(null)
   const dartRef = useRef<SVGGElement>(null)
@@ -93,6 +102,8 @@ export function DartGame() {
     setOutcome(null)
     setIsRevealed(false)
     setDestination({ status: 'idle' })
+    // 다음 판의 바람. 조준하는 동안은 고정이라 보고 보정할 수 있다.
+    setWind(rollWind())
   }
 
   function toSvg(e: React.PointerEvent): Vec {
@@ -168,9 +179,14 @@ export function DartGame() {
     if (chosen) revealRef.current = setTimeout(() => setIsRevealed(true), 450)
   }
 
-  function fly(target: Vec, chosen: SigunguRegion | null) {
+  function fly(
+    target: Vec,
+    chosen: SigunguRegion | null,
+    bowWind: Wind | null,
+  ) {
     setPhase('flying')
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // 모션을 끈다고 난이도가 달라지면 안 된다. 착지점은 이미 확정돼 있다.
       land(target, chosen)
       return
     }
@@ -179,8 +195,10 @@ export function DartGame() {
     const frame = (now: number) => {
       const t = Math.min((now - start) / FLIGHT_MS, 1)
       const k = easeOutCubic(t)
-      const x = HOME.x + (target.x - HOME.x) * k
-      const y = HOME.y + (target.y - HOME.y) * k
+      // 바람 쪽으로 휘어 난다. 양끝이 0이라 착지점은 흔들리지 않는다.
+      const bow = bowWind ? windBow(bowWind, k) : { x: 0, y: 0 }
+      const x = HOME.x + (target.x - HOME.x) * k + bow.x
+      const y = HOME.y + (target.y - HOME.y) * k + bow.y
       const s = 1 + 0.55 * Math.sin(Math.PI * t) // 붕 떠올랐다 내려꽂히는 느낌
       dartRef.current?.setAttribute(
         'transform',
@@ -233,25 +251,33 @@ export function DartGame() {
     }
     let chosen: SigunguRegion | null = null
     let target: Vec
+    let bowWind: Wind | null = null
     if (mode === 'blind') {
       // 눈 가리고: 어차피 안 보이니 착지는 무작위 지역의 대표점으로 스냅한다.
+      // 이미 완전 무작위라 바람·산포를 얹을 이유가 없다.
       chosen =
         koreaMap.regions[Math.floor(Math.random() * koreaMap.regions.length)]
       target = { x: chosen.anchor[0], y: chosen.anchor[1] }
     } else {
-      const raw = landingPoint(HOME, finalPull)
+      bowWind = wind
+      const raw = resolveLanding(
+        HOME,
+        finalPull,
+        wind ?? { angle: 0, strength: 0 },
+      )
       target = {
         x: Math.min(Math.max(raw.x, 12), W - 12),
         y: Math.min(Math.max(raw.y, 12), H - 60),
       }
     }
     setPull({ x: 0, y: 0 })
-    fly(target, chosen)
+    fly(target, chosen, bowWind)
   }
 
   const power = throwPower(pull)
   const isAiming = phase === 'aiming'
-  const target = useMemo(() => landingPoint(HOME, pull), [pull])
+  /** 착지점이 아니라 조준 방향의 짧은 끝점. 어디 꽂힐지는 알려주지 않는다. */
+  const aimTip = useMemo(() => aimDirectionPoint(HOME, pull), [pull])
   const isLanded = phase === 'hit' || phase === 'miss' || phase === 'north'
   const dartPos: Vec = isLanded
     ? (outcome?.landing ?? HOME)
@@ -259,7 +285,7 @@ export function DartGame() {
       ? { x: HOME.x + pull.x, y: HOME.y + pull.y }
       : HOME
   const dartAngle =
-    isAiming && power >= MIN_POWER ? flightAngle(dartPos, target) : 0
+    isAiming && power >= MIN_POWER ? flightAngle(dartPos, aimTip) : 0
   const showResult = phase === 'hit' && (mode === 'aim' || isRevealed)
   const ringC = 2 * Math.PI * RING_R
 
@@ -278,9 +304,13 @@ export function DartGame() {
             onToggle={() => reset('blind')}
           />
         </div>
-        <p className="text-muted font-mono text-xs tracking-widest">
-          시·군·구 {koreaMap.regions.length}곳
-        </p>
+        {mode === 'aim' && wind ? (
+          <WindGauge wind={wind} />
+        ) : (
+          <p className="text-muted font-mono text-xs tracking-widest">
+            시·군·구 {koreaMap.regions.length}곳
+          </p>
+        )}
       </div>
 
       <div className="bg-surface rounded-card border-line shadow-soft relative mx-auto w-full max-w-md overflow-hidden border">
@@ -322,13 +352,13 @@ export function DartGame() {
             </g>
           )}
 
-          {/* 조준선: 눈 가리고 모드에서는 보여주지 않는다 */}
+          {/* 조준선: 방향만 짧게. 눈 가리고 모드에서는 아예 보여주지 않는다 */}
           {isAiming && mode === 'aim' && power >= MIN_POWER && (
             <line
               x1={HOME.x}
               y1={HOME.y}
-              x2={target.x}
-              y2={target.y}
+              x2={aimTip.x}
+              y2={aimTip.y}
               strokeWidth={3}
               strokeDasharray="10 12"
               strokeLinecap="round"
@@ -407,6 +437,51 @@ export function DartGame() {
       {phase === 'miss' && <DartMissCard onRetry={() => reset()} />}
       {phase === 'north' && <DartNorthCard onRetry={() => reset()} />}
     </div>
+  )
+}
+
+/** svg 각도 기준: 0=동, +y가 아래라 시계 방향으로 남→서→북. */
+const WIND_LABEL = ['동', '남동', '남', '남서', '서', '북서', '북', '북동']
+
+/**
+ * 던지기 전에 바람을 보여준다. 숨기면 왜 빗나갔는지 알 수 없어 그냥 억울해진다.
+ * 보고 보정할 수 있어야 "운 반 실력 반"이 된다.
+ */
+function WindGauge({ wind }: { wind: Wind }) {
+  const deg = (wind.angle * 180) / Math.PI
+  const dir = WIND_LABEL[Math.round(wind.angle / (Math.PI / 4)) % 8]
+  // 세기는 0.3~1.0 범위라 그대로 3등분하면 최저값이 0칸이 된다.
+  const bars = Math.max(1, Math.ceil(((wind.strength - 0.3) / 0.7) * 3))
+
+  return (
+    <p
+      className="text-muted flex items-center gap-2 font-mono text-xs tracking-widest"
+      aria-label={`바람 ${dir}풍, 세기 ${bars}단계`}
+    >
+      <span aria-hidden>바람</span>
+      <svg viewBox="0 0 16 16" className="size-4" aria-hidden>
+        <g
+          transform={`rotate(${deg} 8 8)`}
+          className="stroke-ink fill-none"
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1={2} y1={8} x2={13} y2={8} />
+          <polyline points="9,4 13,8 9,12" />
+        </g>
+      </svg>
+      <span className="flex gap-0.5" aria-hidden>
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className={`block h-2.5 w-1 rounded-full ${
+              i < bars ? 'bg-ink' : 'bg-ink/15'
+            }`}
+          />
+        ))}
+      </span>
+    </p>
   )
 }
 

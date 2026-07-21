@@ -2,6 +2,7 @@ import { DartGame } from '@/components/dashboard/DartGame'
 import { RandomDrawer } from '@/components/dashboard/RandomDrawer'
 import { RandomModeTabs } from '@/components/dashboard/RandomModeTabs'
 import { destinationRepo, parseDataState } from '@/lib/data'
+import { rollWind } from '@/lib/geo/dart'
 import type { PageProps } from '@/lib/types/page'
 
 export default async function RandomPage({ searchParams }: PageProps) {
@@ -21,7 +22,7 @@ export default async function RandomPage({ searchParams }: PageProps) {
       </header>
 
       <RandomModeTabs
-        dartPanel={<DartGame />}
+        dartPanel={<DartGame initialWind={rollWind()} />}
         slotPanel={
           <RandomDrawer initialCandidates={candidates} state={dataState} />
         }
