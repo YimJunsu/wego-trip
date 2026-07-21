@@ -1,8 +1,7 @@
 import seed from '@/mocks/trips.json'
 import memberSeed from '@/mocks/members.json'
-import type { TripRepository } from '../repositories'
+import { InvalidInviteCodeError, type TripRepository } from '../repositories'
 import type { Member, Trip } from '../types'
-import { CURRENT_USER_ID } from './profileRepo'
 import { resolve } from './state'
 
 const trips = [...(seed as Trip[])]
@@ -23,10 +22,8 @@ function generateInviteCode(): string {
 }
 
 export const mockTripRepo: TripRepository = {
-  async list(opts) {
-    const mine = members
-      .filter((m) => m.userId === CURRENT_USER_ID)
-      .map((m) => m.tripId)
+  async list(userId, opts) {
+    const mine = members.filter((m) => m.userId === userId).map((m) => m.tripId)
     const found = trips.filter((t) => mine.includes(t.id))
     return resolve(opts, found, [])
   },
@@ -36,28 +33,43 @@ export const mockTripRepo: TripRepository = {
     return resolve(opts, found, null)
   },
 
-  async create(input) {
+  async create(userId, displayName, input) {
     const trip: Trip = {
       ...input,
       id: `trp-${Date.now()}`,
       inviteCode: generateInviteCode(),
-      createdBy: CURRENT_USER_ID,
+      createdBy: userId,
     }
     trips.push(trip)
     members.push({
       tripId: trip.id,
-      userId: CURRENT_USER_ID,
+      userId,
+      displayName,
       role: 'host',
       isDriver: false,
     })
     return trip
   },
 
-  async joinByCode(code) {
+  async joinByCode(userId, displayName, code) {
     const trip = trips.find(
       (t) => t.inviteCode.toUpperCase() === code.trim().toUpperCase(),
     )
-    if (!trip) throw new Error('그런 초대코드는 없습니다.')
+    if (!trip) throw new InvalidInviteCodeError()
+
+    // 이미 들어와 있으면 다시 넣지 않는다. 두 번 눌러도 멤버가 겹치지 않는다.
+    const already = members.some(
+      (m) => m.tripId === trip.id && m.userId === userId,
+    )
+    if (!already) {
+      members.push({
+        tripId: trip.id,
+        userId,
+        displayName,
+        role: 'member',
+        isDriver: false,
+      })
+    }
     return trip
   },
 

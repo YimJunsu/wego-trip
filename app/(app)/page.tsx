@@ -7,28 +7,29 @@ import {
 import { actionButtonClass } from '@/components/dashboard/ActionButton'
 import { EmptyState } from '@/components/dashboard/EmptyState'
 import { TripCard } from '@/components/dashboard/TripCard'
-import { parseDataState, profileRepo, tripRepo } from '@/lib/data'
+import { getUser } from '@/lib/auth/session'
+import { parseDataState, tripRepo } from '@/lib/data'
 import type { PageProps } from '@/lib/types/page'
 
 export default async function HomePage({ searchParams }: PageProps) {
   const { state } = await searchParams
   const opts = { state: parseDataState(state) }
+  const user = await getUser()
 
-  const [me, trips] = await Promise.all([
-    profileRepo.me(opts),
-    tripRepo.list(opts),
-  ])
+  const trips = user ? await tripRepo.list(user.id, opts) : []
   const membersByTrip = await Promise.all(
-    trips.map((trip) => profileRepo.listByTrip(trip.id)),
+    trips.map((trip) => tripRepo.listMembers(trip.id)),
   )
   const today = new Date()
 
   return (
     <div className="flex flex-col gap-8">
       <section>
-        <p className="text-muted font-mono text-xs tracking-widest">
-          안녕 {me.nickname}
-        </p>
+        {user && (
+          <p className="text-muted font-mono text-xs tracking-widest">
+            안녕 {user.name}
+          </p>
+        )}
         <h1 className="font-display mt-1 text-3xl font-semibold tracking-tight">
           어디 갈지 못 정했으면
         </h1>
@@ -60,38 +61,55 @@ export default async function HomePage({ searchParams }: PageProps) {
         </Link>
       </section>
 
-      <section>
-        <h2 className="font-display mb-3 text-lg font-semibold tracking-tight">
-          내 여행방
-        </h2>
-        {trips.length === 0 ? (
-          <EmptyState
-            icon={SuitcaseRollingIcon}
-            title="아직 여행방이 없습니다"
-            description="방을 만들어 친구를 부르거나, 받은 초대코드로 들어가세요."
-            action={
-              <Link
-                href="/trips/new"
-                className={actionButtonClass({ size: 'sm' })}
-              >
-                여행방 만들기
-              </Link>
-            }
-          />
-        ) : (
-          <ul className="flex flex-col gap-4">
-            {trips.map((trip, i) => (
-              <TripCard
-                key={trip.id}
-                trip={trip}
-                members={membersByTrip[i]}
-                today={today}
-                index={i}
-              />
-            ))}
-          </ul>
-        )}
-      </section>
+      {user ? (
+        <section>
+          <h2 className="font-display mb-3 text-lg font-semibold tracking-tight">
+            내 여행방
+          </h2>
+          {trips.length === 0 ? (
+            <EmptyState
+              icon={SuitcaseRollingIcon}
+              title="아직 여행방이 없습니다"
+              description="방을 만들어 친구를 부르거나, 받은 초대코드로 들어가세요."
+              action={
+                <Link
+                  href="/trips/new"
+                  className={actionButtonClass({ size: 'sm' })}
+                >
+                  여행방 만들기
+                </Link>
+              }
+            />
+          ) : (
+            <ul className="flex flex-col gap-4">
+              {trips.map((trip, i) => (
+                <TripCard
+                  key={trip.id}
+                  trip={trip}
+                  members={membersByTrip[i]}
+                  today={today}
+                  index={i}
+                />
+              ))}
+            </ul>
+          )}
+        </section>
+      ) : (
+        <section className="rounded-card border-line bg-surface shadow-soft border p-6">
+          <p className="font-display text-lg font-semibold tracking-tight">
+            여행방은 회원만 만들 수 있어요
+          </p>
+          <p className="text-muted mt-1 text-sm">
+            가입하면 초대코드로 친구를 부르고 정산까지 한 번에 됩니다.
+          </p>
+          <Link
+            href="/login"
+            className={actionButtonClass({ tone: 'ink', className: 'mt-4 w-full' })}
+          >
+            로그인하고 여행방 만들기
+          </Link>
+        </section>
+      )}
     </div>
   )
 }

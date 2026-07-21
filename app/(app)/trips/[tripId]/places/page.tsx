@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr'
 import { PlacesPanel } from '@/components/dashboard/PlacesPanel'
 import { parseDataState, placeRepo, tripRepo } from '@/lib/data'
+import { requireMemberPage } from '@/lib/auth/session'
 import type { PageProps } from '@/lib/types/page'
 
 export default async function PlacesPage({
@@ -10,6 +11,8 @@ export default async function PlacesPage({
   searchParams,
 }: PageProps<{ tripId: string }>) {
   const { tripId } = await params
+  await requireMemberPage(tripId)
+
   const { state } = await searchParams
   const opts = { state: parseDataState(state) }
 

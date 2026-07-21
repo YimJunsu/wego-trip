@@ -7,7 +7,7 @@ import { DestinationCard } from '@/components/dashboard/DestinationCard'
 import { DrawSlot } from '@/components/dashboard/DrawSlot'
 import { EmptyState } from '@/components/dashboard/EmptyState'
 import { FilterChip } from '@/components/dashboard/FilterChip'
-import { destinationRepo } from '@/lib/data'
+import { drawDestination, listDestinations } from '@/lib/destinations/actions'
 import type { DataState } from '@/lib/data/repositories'
 import type {
   BudgetLevel,
@@ -49,8 +49,7 @@ export function RandomDrawer({
 
   useEffect(() => {
     let isStale = false
-    destinationRepo
-      .list({ themes, budget, season })
+    listDestinations({ themes, budget, season })
       .then((found) => {
         if (!isStale) setCandidates(found)
       })
@@ -74,7 +73,7 @@ export function RandomDrawer({
     const spun = new Promise((r) => setTimeout(r, MIN_SPIN_MS))
     try {
       const [picked] = await Promise.all([
-        destinationRepo.draw(filter, { state }),
+        drawDestination(filter, { state }),
         spun,
       ])
       setResult(picked)

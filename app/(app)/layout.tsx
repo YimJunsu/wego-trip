@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import Link from 'next/link'
+import { HeaderAuth } from '@/components/auth/HeaderAuth'
 import { MockStateBar } from '@/components/dashboard/MockStateBar'
 
 const NAV = [
@@ -20,20 +21,23 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           >
             위고트립
           </Link>
-          <nav>
-            <ul className="flex gap-1">
-              {NAV.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className="text-muted hover:text-ink block rounded-full px-3 py-1.5 text-sm font-medium transition duration-200"
-                  >
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <div className="flex items-center gap-1">
+            <nav>
+              <ul className="flex gap-1">
+                {NAV.map(({ href, label }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className="text-muted hover:text-ink block rounded-full px-3 py-1.5 text-sm font-medium transition duration-200"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <HeaderAuth />
+          </div>
         </div>
       </header>
 

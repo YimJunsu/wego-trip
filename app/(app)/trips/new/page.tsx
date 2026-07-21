@@ -1,6 +1,9 @@
 import { NewTripForm } from '@/components/dashboard/NewTripForm'
+import { requireUser } from '@/lib/auth/session'
 
-export default function NewTripPage() {
+export default async function NewTripPage() {
+  await requireUser()
+
   return (
     <div className="flex flex-col gap-6">
       <header>

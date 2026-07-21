@@ -41,16 +41,63 @@ export type AddExpenseInput = {
   participantIds: string[]
 }
 
-export interface ProfileRepository {
-  me(opts?: QueryOptions): Promise<Profile>
-  listByTrip(tripId: string, opts?: QueryOptions): Promise<Profile[]>
+export type SignUpInput = {
+  name: string
+  email: string
+  password: string
+  phone: string
+  birthDate: string
+}
+
+export class DuplicateEmailError extends Error {
+  constructor() {
+    super('이미 가입된 이메일입니다.')
+    this.name = 'DuplicateEmailError'
+  }
+}
+
+/**
+ * 이메일이 없는 것과 비밀번호가 틀린 것을 구분하지 않는다.
+ * 구분하면 어떤 이메일이 가입돼 있는지 알려주는 셈이 된다.
+ */
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super('이메일 또는 비밀번호가 맞지 않습니다.')
+    this.name = 'InvalidCredentialsError'
+  }
+}
+
+/** 존재하지 않는 초대코드. 액션에서 이 타입만 잡아야 다른 오류(repo 버그 등)가 묻히지 않는다. */
+export class InvalidInviteCodeError extends Error {
+  constructor() {
+    super('그런 초대코드는 없습니다.')
+    this.name = 'InvalidInviteCodeError'
+  }
+}
+
+/**
+ * 인증. 자격증명(Account)은 이 인터페이스 밖으로 나가지 않는다 —
+ * 모든 메서드가 Profile만 반환한다.
+ */
+export interface AuthRepository {
+  /** 이미 쓰는 이메일이면 DuplicateEmailError를 던진다. */
+  signUp(input: SignUpInput): Promise<Profile>
+  /** 이메일·비밀번호가 맞지 않으면 InvalidCredentialsError를 던진다. */
+  signIn(email: string, password: string): Promise<Profile>
+  findById(id: string): Promise<Profile | null>
 }
 
 export interface TripRepository {
-  list(opts?: QueryOptions): Promise<Trip[]>
+  /** userId가 속한 여행방만 돌려준다. */
+  list(userId: string, opts?: QueryOptions): Promise<Trip[]>
   get(id: string, opts?: QueryOptions): Promise<Trip | null>
-  create(input: CreateTripInput): Promise<Trip>
-  joinByCode(code: string): Promise<Trip>
+  /** displayName은 이 방에서 쓸 이름. 기본값은 호출부가 Profile.name으로 채운다. */
+  create(
+    userId: string,
+    displayName: string,
+    input: CreateTripInput,
+  ): Promise<Trip>
+  joinByCode(userId: string, displayName: string, code: string): Promise<Trip>
   listMembers(tripId: string, opts?: QueryOptions): Promise<Member[]>
 }
 

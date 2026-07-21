@@ -1,16 +1,16 @@
+import { mockAuthRepo } from './mock/authRepo'
 import { mockCompatRepo } from './mock/compatRepo'
 import { mockDestinationRepo } from './mock/destinationRepo'
 import { mockExpenseRepo } from './mock/expenseRepo'
 import { mockPlaceRepo } from './mock/placeRepo'
-import { mockProfileRepo } from './mock/profileRepo'
 import { mockSettlementRepo } from './mock/settlementRepo'
 import { mockTripRepo } from './mock/tripRepo'
 import type {
+  AuthRepository,
   CompatRepository,
   DestinationRepository,
   ExpenseRepository,
   PlaceRepository,
-  ProfileRepository,
   SettlementRepository,
   TripRepository,
 } from './repositories'
@@ -24,7 +24,7 @@ import type {
  *   export const tripRepo: TripRepository =
  *     process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase' ? supabaseTripRepo : mockTripRepo
  */
-export const profileRepo: ProfileRepository = mockProfileRepo
+export const authRepo: AuthRepository = mockAuthRepo
 export const tripRepo: TripRepository = mockTripRepo
 export const expenseRepo: ExpenseRepository = mockExpenseRepo
 export const settlementRepo: SettlementRepository = mockSettlementRepo
@@ -32,5 +32,9 @@ export const destinationRepo: DestinationRepository = mockDestinationRepo
 export const placeRepo: PlaceRepository = mockPlaceRepo
 export const compatRepo: CompatRepository = mockCompatRepo
 
-export { CURRENT_USER_ID } from './mock/profileRepo'
 export { parseDataState } from './mock/state'
+export {
+  DuplicateEmailError,
+  InvalidCredentialsError,
+  InvalidInviteCodeError,
+} from './repositories'

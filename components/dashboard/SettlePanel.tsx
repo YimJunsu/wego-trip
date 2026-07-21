@@ -8,21 +8,21 @@ import { ExpenseList } from '@/components/dashboard/ExpenseList'
 import { SettlementList } from '@/components/dashboard/SettlementList'
 import { AvatarStack } from '@/components/ui/Avatar'
 import { Badge } from '@/components/ui/Badge'
-import type { Expense, Profile, Settlement } from '@/lib/data/types'
+import type { Expense, Member, Settlement } from '@/lib/data/types'
 import { formatWon } from '@/lib/utils/format'
 
 export function SettlePanel({
   tripId,
-  profiles,
+  members,
   initialExpenses,
   settlements,
-  driverNickname,
+  driverName,
 }: {
   tripId: string
-  profiles: Profile[]
+  members: Member[]
   initialExpenses: Expense[]
   settlements: Settlement[]
-  driverNickname?: string
+  driverName?: string
 }) {
   const [expenses, setExpenses] = useState(initialExpenses)
   const [isAdding, setIsAdding] = useState(false)
@@ -36,17 +36,20 @@ export function SettlePanel({
           <p className="font-mono text-xs tracking-widest opacity-60">
             총 지출
           </p>
-          <AvatarStack people={profiles} label="함께 쓴 사람" />
+          <AvatarStack
+            people={members.map((m) => ({ id: m.userId, name: m.displayName }))}
+            label="함께 쓴 사람"
+          />
         </div>
         <p className="font-display mt-2 text-4xl font-semibold tracking-tight">
           {formatWon(total)}
         </p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           <Badge className="bg-ink/8 text-ink">{expenses.length}건</Badge>
-          <Badge className="bg-ink/8 text-ink">{profiles.length}명</Badge>
-          {driverNickname ? (
+          <Badge className="bg-ink/8 text-ink">{members.length}명</Badge>
+          {driverName ? (
             <Badge className="bg-ink text-paper">
-              운전자 {driverNickname} 20% 할인
+              운전자 {driverName} 20% 할인
             </Badge>
           ) : null}
         </div>
@@ -69,7 +72,7 @@ export function SettlePanel({
           <div className="mb-4">
             <AddExpenseForm
               tripId={tripId}
-              profiles={profiles}
+              members={members}
               onCancel={() => setIsAdding(false)}
               onAdded={(expense) => {
                 setExpenses((prev) => [...prev, expense])
@@ -79,14 +82,14 @@ export function SettlePanel({
           </div>
         ) : null}
 
-        <ExpenseList expenses={expenses} profiles={profiles} />
+        <ExpenseList expenses={expenses} members={members} />
       </section>
 
       <section>
         <h2 className="font-display mb-3 text-lg font-semibold tracking-tight">
           누가 누구에게
         </h2>
-        <SettlementList settlements={settlements} profiles={profiles} />
+        <SettlementList settlements={settlements} members={members} />
         <p className="rounded-inner border-line text-muted mt-4 border border-dashed p-4 text-xs leading-relaxed">
           MOCK · 이 송금 목록은 미리 계산해 둔 고정값입니다. 지출을 새로 넣어도
           다시 계산되지 않습니다. 엔빵·운전자 할인·송금 최소화 로직은

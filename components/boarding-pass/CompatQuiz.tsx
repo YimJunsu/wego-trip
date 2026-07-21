@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { CompatResultCard } from '@/components/boarding-pass/CompatResultCard'
 import { PassButton } from '@/components/boarding-pass/PassButton'
 import { PassCard, PassTear } from '@/components/boarding-pass/PassCard'
-import { compatRepo } from '@/lib/data'
+import { getCompatResult } from '@/lib/compat/actions'
 import type { DataState } from '@/lib/data/repositories'
 import type { CompatResult, QuizQuestion } from '@/lib/data/types'
 
@@ -35,7 +35,7 @@ export function CompatQuiz({
 
     setPhase('scoring')
     try {
-      setResult(await compatRepo.result(next, { state }))
+      setResult(await getCompatResult(next, { state }))
       setPhase('result')
     } catch {
       setPhase('error')

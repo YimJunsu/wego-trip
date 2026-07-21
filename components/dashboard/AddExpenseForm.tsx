@@ -4,27 +4,27 @@ import { useState } from 'react'
 import { ActionButton } from '@/components/dashboard/ActionButton'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { TextField } from '@/components/dashboard/TextField'
-import { expenseRepo } from '@/lib/data'
-import type { Expense, Profile } from '@/lib/data/types'
+import { addExpense } from '@/lib/expenses/actions'
+import type { Expense, Member } from '@/lib/data/types'
 
 const CATEGORIES = ['교통', '숙박', '식비', '카페', '간식', '기타'] as const
 
 export function AddExpenseForm({
   tripId,
-  profiles,
+  members,
   onAdded,
   onCancel,
 }: {
   tripId: string
-  profiles: Profile[]
+  members: Member[]
   onAdded: (expense: Expense) => void
   onCancel: () => void
 }) {
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
-  const [payerId, setPayerId] = useState(profiles[0]?.id ?? '')
+  const [payerId, setPayerId] = useState(members[0]?.userId ?? '')
   const [participantIds, setParticipantIds] = useState(
-    profiles.map((p) => p.id),
+    members.map((m) => m.userId),
   )
   const [category, setCategory] = useState<string>(CATEGORIES[0])
   const [error, setError] = useState<string>()
@@ -44,16 +44,22 @@ export function AddExpenseForm({
     if (participantIds.length === 0) return setError('부담할 사람이 없습니다.')
 
     setError(undefined)
-    onAdded(
-      await expenseRepo.add({
-        tripId,
-        payerId,
-        amount: Math.round(won),
-        description,
-        category,
-        participantIds,
-      }),
-    )
+    try {
+      onAdded(
+        await addExpense({
+          tripId,
+          payerId,
+          amount: Math.round(won),
+          description,
+          category,
+          participantIds,
+        }),
+      )
+    } catch {
+      // 서버 액션의 가드(멤버십·검증)가 막았거나 알 수 없는 오류다. 버튼이 조용히
+      // 아무 반응 없는 상태로 남지 않도록 기존 에러 표시 자리에 띄운다.
+      setError('추가하지 못했습니다. 잠시 후 다시 시도해 주세요.')
+    }
   }
 
   return (
@@ -78,23 +84,23 @@ export function AddExpenseForm({
       />
 
       <ChipGroup label="결제한 사람">
-        {profiles.map((p) => (
+        {members.map((m) => (
           <FilterChip
-            key={p.id}
-            label={p.nickname}
-            isSelected={payerId === p.id}
-            onToggle={() => setPayerId(p.id)}
+            key={m.userId}
+            label={m.displayName}
+            isSelected={payerId === m.userId}
+            onToggle={() => setPayerId(m.userId)}
           />
         ))}
       </ChipGroup>
 
       <ChipGroup label="나눠 낼 사람">
-        {profiles.map((p) => (
+        {members.map((m) => (
           <FilterChip
-            key={p.id}
-            label={p.nickname}
-            isSelected={participantIds.includes(p.id)}
-            onToggle={() => toggleParticipant(p.id)}
+            key={m.userId}
+            label={m.displayName}
+            isSelected={participantIds.includes(m.userId)}
+            onToggle={() => toggleParticipant(m.userId)}
           />
         ))}
       </ChipGroup>

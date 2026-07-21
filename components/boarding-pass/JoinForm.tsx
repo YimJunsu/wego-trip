@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 import Link from 'next/link'
 import {
   InviteCodeInput,
@@ -8,36 +8,20 @@ import {
 } from '@/components/boarding-pass/InviteCodeInput'
 import { PassButton } from '@/components/boarding-pass/PassButton'
 import { TripPass } from '@/components/boarding-pass/TripPass'
-import { tripRepo } from '@/lib/data'
-import type { Trip } from '@/lib/data/types'
+import { joinTripAction, type JoinFormState } from '@/lib/trips/actions'
 
-type Phase = 'idle' | 'submitting' | 'joined'
+const EMPTY: JoinFormState = {}
 
 export function JoinForm() {
+  const [state, formAction, isPending] = useActionState(joinTripAction, EMPTY)
   const [code, setCode] = useState('')
-  const [phase, setPhase] = useState<Phase>('idle')
-  const [trip, setTrip] = useState<Trip | null>(null)
-  const [error, setError] = useState<string>()
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault()
-    setPhase('submitting')
-    setError(undefined)
-    try {
-      setTrip(await tripRepo.joinByCode(code))
-      setPhase('joined')
-    } catch {
-      setError('그런 코드는 없습니다. 방장에게 다시 물어보세요.')
-      setPhase('idle')
-    }
-  }
-
-  if (phase === 'joined' && trip) {
+  if (state.trip) {
     return (
       <div className="flex flex-col gap-5">
-        <TripPass trip={trip} stampLabel="BOARDED" isStampAnimated />
+        <TripPass trip={state.trip} stampLabel="BOARDED" isStampAnimated />
         <Link
-          href={`/trips/${trip.id}`}
+          href={`/trips/${state.trip.id}`}
           className="bg-pass-navy text-pass-cream rounded-pass px-5 py-3 text-center font-mono text-sm tracking-widest"
         >
           여행방 들어가기
@@ -47,13 +31,15 @@ export function JoinForm() {
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-5">
-      <InviteCodeInput value={code} onChange={setCode} error={error} />
+    <form action={formAction} className="flex flex-col gap-5">
+      <InviteCodeInput value={code} onChange={setCode} error={state.message} />
+      {/* InviteCodeInput은 name을 받지 않는다. 값만 따로 실어 보낸다. */}
+      <input type="hidden" name="code" value={code} />
       <PassButton
         type="submit"
-        disabled={code.length < INVITE_CODE_LENGTH || phase === 'submitting'}
+        disabled={code.length < INVITE_CODE_LENGTH || isPending}
       >
-        {phase === 'submitting' ? 'CHECKING…' : 'BOARDING'}
+        {isPending ? 'CHECKING…' : 'BOARDING'}
       </PassButton>
     </form>
   )

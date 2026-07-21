@@ -2,12 +2,8 @@ import { notFound } from 'next/navigation'
 import { CopyCodeButton } from '@/components/dashboard/CopyCodeButton'
 import { ThemeBadge } from '@/components/dashboard/ThemeBadge'
 import { TripDetailTabs } from '@/components/dashboard/TripDetailTabs'
-import {
-  parseDataState,
-  profileRepo,
-  settlementRepo,
-  tripRepo,
-} from '@/lib/data'
+import { parseDataState, settlementRepo, tripRepo } from '@/lib/data'
+import { requireMemberPage } from '@/lib/auth/session'
 import type { PageProps } from '@/lib/types/page'
 import { formatDateRange, formatDday, formatNights } from '@/lib/utils/format'
 
@@ -16,15 +12,16 @@ export default async function TripDetailPage({
   searchParams,
 }: PageProps<{ tripId: string }>) {
   const { tripId } = await params
+  await requireMemberPage(tripId)
+
   const { state } = await searchParams
   const opts = { state: parseDataState(state) }
 
   const trip = await tripRepo.get(tripId, opts)
   if (!trip) notFound()
 
-  const [members, profiles, settlements] = await Promise.all([
+  const [members, settlements] = await Promise.all([
     tripRepo.listMembers(tripId, opts),
-    profileRepo.listByTrip(tripId, opts),
     settlementRepo.listByTrip(tripId, opts),
   ])
 
@@ -60,12 +57,7 @@ export default async function TripDetailPage({
         </div>
       </header>
 
-      <TripDetailTabs
-        trip={trip}
-        members={members}
-        profiles={profiles}
-        settlements={settlements}
-      />
+      <TripDetailTabs trip={trip} members={members} settlements={settlements} />
     </div>
   )
 }

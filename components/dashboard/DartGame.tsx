@@ -12,7 +12,7 @@ import { EmptyState } from '@/components/dashboard/EmptyState'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { KoreaMapLayer } from '@/components/dashboard/KoreaMapLayer'
 import { SkeletonBlock } from '@/components/dashboard/Skeleton'
-import { destinationRepo } from '@/lib/data'
+import { drawDestination } from '@/lib/destinations/actions'
 import type { Destination } from '@/lib/data/types'
 import { isNorthOfMdl } from '@/lib/geo/dmz'
 import { PROVINCE_TO_REGION } from '@/lib/utils/labels'
@@ -143,8 +143,7 @@ export function DartGame({ initialWind }: { initialWind: Wind }) {
     }
     const throwId = throwIdRef.current
     setDestination({ status: 'pending' })
-    destinationRepo
-      .draw({ region: key })
+    drawDestination({ region: key })
       .then((picked) => {
         if (throwId !== throwIdRef.current) return
         setDestination(

@@ -9,12 +9,29 @@ export type BudgetLevel = 'low' | 'mid' | 'high'
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter'
 export type QuizAxis = 'plan' | 'morning' | 'activity' | 'budget'
 
+export type AuthProvider = 'email' | 'kakao' | 'google'
+
 export type Profile = {
   id: string
-  nickname: string
-  avatarUrl?: string
+  /** 실명. 가입 시 1회 입력한다. 여행방 안의 표시 이름은 Member.displayName이다. */
+  name: string
+  email: string
+  /** 숫자만. 하이픈은 저장하지 않는다. */
+  phone: string
+  birthDate: string
+  provider: AuthProvider
+  /** 정산 완료 시 +1. 증가 로직은 아직 없다. */
+  completedTripCount: number
+  createdAt: string
   travelStyle?: QuizResult
 }
+
+/**
+ * 자격증명이 붙은 회원. authRepo 안에서만 존재한다.
+ * AuthRepository의 어떤 메서드도 이 타입을 반환하지 않는다 —
+ * Profile이 서버 컴포넌트에서 클라이언트 prop으로 넘어가면 HTML에 직렬화되기 때문이다.
+ */
+export type Account = Profile & { passwordHash: string }
 
 export type Trip = {
   id: string
@@ -30,6 +47,8 @@ export type Trip = {
 export type Member = {
   tripId: string
   userId: string
+  /** 이 여행방에서 쓰는 이름. 참여 시 기본값은 Profile.name이다. */
+  displayName: string
   role: 'host' | 'member'
   isDriver: boolean
 }
@@ -110,10 +129,13 @@ export type CompatAxisBreakdown = {
   right: number
 }
 
+/** 궁합 카드는 이름만 쓴다. Profile 전체를 실어 보내면 이메일·전화번호가 브라우저로 나간다. */
+export type CompatMember = { id: string; name: string }
+
 export type CompatResult = {
   percent: number
   headline: string
   description: string
-  members: [Profile, Profile]
+  members: [CompatMember, CompatMember]
   breakdown: CompatAxisBreakdown[]
 }
