@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { requireUser } from '@/lib/auth/session'
 import { InvalidInviteCodeError, tripRepo } from '@/lib/data'
 import type { DestinationTheme, Trip } from '@/lib/data/types'
+import { THEME_ORDER } from '@/lib/utils/labels'
 
 export type TripFormState = {
   errors?: Record<string, string>
@@ -27,7 +28,13 @@ export async function createTripAction(
   const region = field(formData, 'region').trim()
   const startDate = field(formData, 'startDate')
   const endDate = field(formData, 'endDate')
-  const coverTheme = field(formData, 'coverTheme') as DestinationTheme
+  const rawTheme = field(formData, 'coverTheme')
+  // formData는 사용자가 임의로 조작할 수 있다 — THEME_ORDER에 없는 값이면 'sea'로 되돌린다.
+  const coverTheme: DestinationTheme = (
+    THEME_ORDER as readonly string[]
+  ).includes(rawTheme)
+    ? (rawTheme as DestinationTheme)
+    : 'sea'
 
   const errors: Record<string, string> = {}
   if (!name) errors.name = '이름은 있어야 합니다.'

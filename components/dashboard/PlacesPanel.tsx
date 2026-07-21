@@ -19,15 +19,23 @@ export function PlacesPanel({
 }) {
   const [places, setPlaces] = useState(initialPlaces)
   const [isChakanOnly, setIsChakanOnly] = useState(false)
+  const [error, setError] = useState<string>()
 
   const shown = isChakanOnly ? places.filter((p) => p.isChakan) : places
   const savedCount = places.filter((p) => p.savedToTripId === tripId).length
 
   async function toggleSave(placeId: string) {
-    const updated = await toggleSavedPlace(placeId, tripId)
-    setPlaces((prev) =>
-      prev.map((p) => (p.id === updated.id ? { ...updated } : p)),
-    )
+    try {
+      const updated = await toggleSavedPlace(placeId, tripId)
+      setError(undefined)
+      setPlaces((prev) =>
+        prev.map((p) => (p.id === updated.id ? { ...updated } : p)),
+      )
+    } catch {
+      // 서버 액션의 멤버십 가드가 막았거나 알 수 없는 오류다. 찜 버튼이 조용히
+      // 아무 반응 없는 상태로 남지 않도록 메시지를 띄운다.
+      setError('찜하지 못했습니다. 잠시 후 다시 시도해 주세요.')
+    }
   }
 
   if (places.length === 0) {
@@ -43,6 +51,12 @@ export function PlacesPanel({
   return (
     <div className="flex flex-col gap-5">
       <MapPlaceholder places={shown} />
+
+      {error ? (
+        <p role="alert" className="text-danger text-sm">
+          {error}
+        </p>
+      ) : null}
 
       <div className="flex items-center justify-between gap-3">
         <FilterChip

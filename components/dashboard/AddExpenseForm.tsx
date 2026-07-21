@@ -44,16 +44,22 @@ export function AddExpenseForm({
     if (participantIds.length === 0) return setError('부담할 사람이 없습니다.')
 
     setError(undefined)
-    onAdded(
-      await addExpense({
-        tripId,
-        payerId,
-        amount: Math.round(won),
-        description,
-        category,
-        participantIds,
-      }),
-    )
+    try {
+      onAdded(
+        await addExpense({
+          tripId,
+          payerId,
+          amount: Math.round(won),
+          description,
+          category,
+          participantIds,
+        }),
+      )
+    } catch {
+      // 서버 액션의 가드(멤버십·검증)가 막았거나 알 수 없는 오류다. 버튼이 조용히
+      // 아무 반응 없는 상태로 남지 않도록 기존 에러 표시 자리에 띄운다.
+      setError('추가하지 못했습니다. 잠시 후 다시 시도해 주세요.')
+    }
   }
 
   return (
