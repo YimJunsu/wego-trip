@@ -16,13 +16,12 @@ export function LoginForm() {
     <div className="flex flex-col gap-6">
       <form action={formAction} className="flex flex-col gap-5">
         <TextField label="이메일" name="email" type="email" required />
-        <TextField
-          label="비밀번호"
-          name="password"
-          type="password"
-          required
-          error={state.message}
-        />
+        <TextField label="비밀번호" name="password" type="password" required />
+        {state.message ? (
+          <p role="alert" className="text-danger text-sm">
+            {state.message}
+          </p>
+        ) : null}
         <ActionButton type="submit" tone="ink" size="lg" disabled={isPending}>
           {isPending ? '확인 중…' : '로그인'}
         </ActionButton>

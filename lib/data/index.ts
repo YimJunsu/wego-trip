@@ -33,3 +33,4 @@ export const placeRepo: PlaceRepository = mockPlaceRepo
 export const compatRepo: CompatRepository = mockCompatRepo
 
 export { parseDataState } from './mock/state'
+export { DuplicateEmailError, InvalidCredentialsError } from './repositories'

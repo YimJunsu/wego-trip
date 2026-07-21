@@ -4,7 +4,12 @@ import {
   hashPasswordSync,
   verifyPassword,
 } from '@/lib/auth/password'
-import type { AuthRepository, SignUpInput } from '../repositories'
+import {
+  DuplicateEmailError,
+  InvalidCredentialsError,
+  type AuthRepository,
+  type SignUpInput,
+} from '../repositories'
 import type { Account, Profile } from '../types'
 
 /**
@@ -22,24 +27,6 @@ type SeedAccount = Omit<Account, 'passwordHash'> & { password: string }
 const accounts: Account[] = (seed as SeedAccount[]).map(
   ({ password, ...rest }) => ({ ...rest, passwordHash: hashPasswordSync(password) }),
 )
-
-export class DuplicateEmailError extends Error {
-  constructor() {
-    super('이미 가입된 이메일입니다.')
-    this.name = 'DuplicateEmailError'
-  }
-}
-
-/**
- * 이메일이 없는 것과 비밀번호가 틀린 것을 구분하지 않는다.
- * 구분하면 어떤 이메일이 가입돼 있는지 알려주는 셈이 된다.
- */
-export class InvalidCredentialsError extends Error {
-  constructor() {
-    super('이메일 또는 비밀번호가 맞지 않습니다.')
-    this.name = 'InvalidCredentialsError'
-  }
-}
 
 /** 자격증명을 뗀 공개 프로필. 밖으로 나가는 건 항상 이것뿐이다. */
 function toProfile({ passwordHash: _, ...profile }: Account): Profile {

@@ -1,8 +1,11 @@
 'use server'
 
 import { redirect } from 'next/navigation'
-import { authRepo } from '@/lib/data'
-import { DuplicateEmailError } from '@/lib/data/mock/authRepo'
+import {
+  authRepo,
+  DuplicateEmailError,
+  InvalidCredentialsError,
+} from '@/lib/data'
 import { createSession, destroySession } from './session'
 import { normalizePhone, validateSignUp, type FieldErrors } from './validate'
 
@@ -58,9 +61,10 @@ export async function signInAction(
       field(formData, 'password'),
     )
     userId = profile.id
-  } catch {
+  } catch (error) {
     // 어느 쪽이 틀렸는지 구분해 알리지 않는다.
-    return { message: '이메일 또는 비밀번호가 맞지 않습니다.' }
+    if (error instanceof InvalidCredentialsError) return { message: error.message }
+    throw error
   }
 
   await createSession(userId)

@@ -49,6 +49,24 @@ export type SignUpInput = {
   birthDate: string
 }
 
+export class DuplicateEmailError extends Error {
+  constructor() {
+    super('이미 가입된 이메일입니다.')
+    this.name = 'DuplicateEmailError'
+  }
+}
+
+/**
+ * 이메일이 없는 것과 비밀번호가 틀린 것을 구분하지 않는다.
+ * 구분하면 어떤 이메일이 가입돼 있는지 알려주는 셈이 된다.
+ */
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super('이메일 또는 비밀번호가 맞지 않습니다.')
+    this.name = 'InvalidCredentialsError'
+  }
+}
+
 /**
  * 인증. 자격증명(Account)은 이 인터페이스 밖으로 나가지 않는다 —
  * 모든 메서드가 Profile만 반환한다.
