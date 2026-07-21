@@ -16,6 +16,17 @@
   /* 기능색. 강조색이 아니라 상태를 알리는 용도로만 쓴다. */
   --color-danger: #c8372d;
 
+  /*
+   * 지도 전용 팔레트. 지도는 UI가 아니라 콘텐츠(일러스트)라 자체 색을 갖는다.
+   * 범위는 지도 svg 안뿐이다 — 버튼·카드·배지는 여전히 라임 하나. (DESIGN_SYSTEM §6)
+   * 채도를 낮춰 미색 배경과 붙고, 명중 지역의 라임이 그 위에서 튀게 했다.
+   */
+  --color-terrain-sea: #d9e6e8;
+  --color-terrain-sea-deep: #c2d5da;
+  --color-terrain-low: #e7e9d6;
+  --color-terrain-mid: #cfd9b6;
+  --color-terrain-high: #a8b98d;
+
   --color-pass-navy: #1b2a4a;
   --color-pass-cream: #f3ecdd;
   --color-pass-stamp: #c1440e;
