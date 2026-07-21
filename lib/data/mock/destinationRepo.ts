@@ -7,6 +7,7 @@ const destinations = seed as Destination[]
 
 function match(dst: Destination, filter?: DestinationFilter): boolean {
   if (!filter) return true
+  if (filter.region && dst.region !== filter.region) return false
   /** 테마는 OR. 하나라도 걸리면 후보다 — 여러 개 고를수록 후보가 늘어야 자연스럽다. */
   if (
     filter.themes?.length &&
