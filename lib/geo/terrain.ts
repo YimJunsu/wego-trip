@@ -101,9 +101,3 @@ export function terrainGrade(province: string, name: string): TerrainGrade {
   if (MID_KEYS.has(key)) return 'mid'
   return 'low'
 }
-
-/** 검증 스크립트가 실재하는 시군구인지 대조할 때 쓴다. */
-export const TERRAIN_KEYS = {
-  high: [...HIGH_KEYS],
-  mid: [...MID_KEYS],
-} as const

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils/cn'
 
 export type Tone = 'ink' | 'lime' | 'quiet'
-export type Size = 'sm' | 'md' | 'lg'
+type Size = 'sm' | 'md' | 'lg'
 
 const TONE: Record<Tone, string> = {
   ink: 'bg-ink text-paper hover:bg-ink/90',
@@ -51,24 +51,6 @@ export function ActionButton({ tone, size, className, ...rest }: Props) {
       className={cn(
         actionButtonClass({ tone, size, className }),
         'disabled:active:scale-100',
-      )}
-      {...rest}
-    />
-  )
-}
-
-/** 아이콘 하나만 담는 원형 버튼. */
-export function IconButton({
-  tone = 'quiet',
-  className,
-  ...rest
-}: ButtonHTMLAttributes<HTMLButtonElement> & { tone?: Tone }) {
-  return (
-    <Button
-      className={cn(
-        'inline-flex h-10 w-10 items-center justify-center rounded-full transition duration-200 ease-out active:scale-[0.94]',
-        TONE[tone],
-        className,
       )}
       {...rest}
     />

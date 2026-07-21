@@ -18,7 +18,7 @@ export type SigunguRegion = {
   anchor: [number, number]
 }
 
-export type KoreaMapInset = {
+type KoreaMapInset = {
   label: string
   x: number
   y: number

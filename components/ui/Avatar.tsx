@@ -7,7 +7,7 @@ const SIZE = {
   lg: 48,
 } as const
 
-export type AvatarSize = keyof typeof SIZE
+type AvatarSize = keyof typeof SIZE
 
 export function Avatar({
   name,
