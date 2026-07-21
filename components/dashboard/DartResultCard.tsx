@@ -36,7 +36,10 @@ export function DartResultCard({
           <ArrowCounterClockwiseIcon size={18} weight="bold" aria-hidden />
           다시 던지기
         </ActionButton>
-        <Link href="/trips/new" className={actionButtonClass({ tone: 'quiet' })}>
+        <Link
+          href="/trips/new"
+          className={actionButtonClass({ tone: 'quiet' })}
+        >
           이 지역으로 여행방 만들기
         </Link>
       </div>
@@ -47,13 +50,40 @@ export function DartResultCard({
 /** 바다·지도 밖에 떨어진 경우. 벌칙 없이 다시 던지게 한다. */
 export function DartMissCard({ onRetry }: { onRetry: () => void }) {
   return (
+    <DartRetryCard
+      title="바다에 빠졌습니다"
+      description="국내 한정입니다. 육지에 꽂힐 때까지 다시 던지세요."
+      onRetry={onRetry}
+    />
+  )
+}
+
+/** 휴전선 이북에 떨어진 경우. 바다와 구분해 왜 안 되는지를 알려 준다. */
+export function DartNorthCard({ onRetry }: { onRetry: () => void }) {
+  return (
+    <DartRetryCard
+      title="북한에는 갈 수 없습니다"
+      description="아직은 국내 한정입니다. 휴전선 아래로 다시 던지세요."
+      onRetry={onRetry}
+    />
+  )
+}
+
+function DartRetryCard({
+  title,
+  description,
+  onRetry,
+}: {
+  title: string
+  description: string
+  onRetry: () => void
+}) {
+  return (
     <div className="bg-surface rounded-card border-line shadow-soft animate-rise border p-6 text-center">
       <h2 className="font-display text-2xl font-semibold tracking-tight">
-        바다에 빠졌습니다
+        {title}
       </h2>
-      <p className="text-muted mt-1 text-sm">
-        국내 한정입니다. 육지에 꽂힐 때까지 다시 던지세요.
-      </p>
+      <p className="text-muted mt-1 text-sm">{description}</p>
       <ActionButton tone="ink" className="mt-5" onClick={onRetry}>
         <ArrowCounterClockwiseIcon size={18} weight="bold" aria-hidden />
         다시 던지기
