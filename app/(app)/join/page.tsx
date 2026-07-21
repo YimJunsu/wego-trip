@@ -3,10 +3,10 @@ import { tripRepo } from '@/lib/data'
 import { requireUser } from '@/lib/auth/session'
 
 export default async function JoinPage() {
-  await requireUser()
+  const user = await requireUser()
 
   /** mock에서만 보여 주는 힌트. 실제 코드는 친구가 불러 준다. */
-  const trips = await tripRepo.list()
+  const trips = await tripRepo.list(user.id)
 
   return (
     <div className="flex flex-col gap-6">

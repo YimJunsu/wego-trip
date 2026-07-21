@@ -16,7 +16,7 @@ export default async function HomePage({ searchParams }: PageProps) {
   const opts = { state: parseDataState(state) }
   const user = await getUser()
 
-  const trips = user ? await tripRepo.list(opts) : []
+  const trips = user ? await tripRepo.list(user.id, opts) : []
   const membersByTrip = await Promise.all(
     trips.map((trip) => tripRepo.listMembers(trip.id)),
   )

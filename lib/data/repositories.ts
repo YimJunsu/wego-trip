@@ -80,10 +80,16 @@ export interface AuthRepository {
 }
 
 export interface TripRepository {
-  list(opts?: QueryOptions): Promise<Trip[]>
+  /** userId가 속한 여행방만 돌려준다. */
+  list(userId: string, opts?: QueryOptions): Promise<Trip[]>
   get(id: string, opts?: QueryOptions): Promise<Trip | null>
-  create(input: CreateTripInput): Promise<Trip>
-  joinByCode(code: string): Promise<Trip>
+  /** displayName은 이 방에서 쓸 이름. 기본값은 호출부가 Profile.name으로 채운다. */
+  create(
+    userId: string,
+    displayName: string,
+    input: CreateTripInput,
+  ): Promise<Trip>
+  joinByCode(userId: string, displayName: string, code: string): Promise<Trip>
   listMembers(tripId: string, opts?: QueryOptions): Promise<Member[]>
 }
 
