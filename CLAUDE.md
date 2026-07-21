@@ -57,6 +57,5 @@ pnpm format      # Prettier
 
 ## 협업 메모
 
-- 브랜치: `feat/…` `fix/…` `chore/…` `docs/…`
 - 커밋: Conventional Commits (`feat:`, `fix:` …)
-- PR은 작게, UI 변경엔 스크린샷 첨부. `main` 직접 푸시 금지.
+- PR은 작게, `main` 별도의 지시 있지 전까지 커밋, 푸시 금지. PR 리뷰 1인 이상.

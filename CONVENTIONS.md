@@ -121,10 +121,9 @@ export const tripRepo: TripRepository =
 
 ## 6. Git · 협업
 
-- 브랜치: `feat/…` `fix/…` `chore/…` `docs/…` (예: `feat/settle-driver-discount`).
 - 커밋: [Conventional Commits](https://www.conventionalcommits.org). `feat:`, `fix:`, `refactor:`, `docs:`, `chore:`.
 - PR은 작게(하나의 기능/화면). UI 변경엔 스크린샷 필수.
-- `main` 직접 푸시 금지. PR 리뷰 1인 이상.
+- `main` 별도의 지시 있지 전까지 푸시 금지. PR 리뷰 1인 이상.
 - PR 셀프 체크: `pnpm lint` `pnpm typecheck` 통과 · mock으로 빈/로딩/에러/정상 확인 · 시크릿 미포함.
 
 ## 7. 환경 변수
