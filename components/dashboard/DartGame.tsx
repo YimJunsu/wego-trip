@@ -1,10 +1,21 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { EyeSlashIcon } from '@phosphor-icons/react'
-import { DartMissCard, DartResultCard } from '@/components/dashboard/DartResultCard'
+import { EyeSlashIcon, MapTrifoldIcon } from '@phosphor-icons/react'
+import {
+  DartMissCard,
+  DartNorthCard,
+  DartResultCard,
+} from '@/components/dashboard/DartResultCard'
+import { DestinationCard } from '@/components/dashboard/DestinationCard'
+import { EmptyState } from '@/components/dashboard/EmptyState'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { KoreaMapLayer } from '@/components/dashboard/KoreaMapLayer'
+import { SkeletonBlock } from '@/components/dashboard/Skeleton'
+import { destinationRepo } from '@/lib/data'
+import type { Destination } from '@/lib/data/types'
+import { isNorthOfMdl } from '@/lib/geo/dmz'
+import { PROVINCE_TO_REGION } from '@/lib/utils/labels'
 import {
   clampPull,
   easeOutCubic,
@@ -15,15 +26,26 @@ import {
   throwPower,
   type Vec,
 } from '@/lib/geo/dart'
-import { koreaMap, unprojectPoint, type SigunguRegion } from '@/lib/geo/koreaMap'
+import {
+  koreaMap,
+  unprojectPoint,
+  type SigunguRegion,
+} from '@/lib/geo/koreaMap'
 
 type Mode = 'aim' | 'blind'
-type Phase = 'ready' | 'aiming' | 'flying' | 'hit' | 'miss'
+type Phase = 'ready' | 'aiming' | 'flying' | 'hit' | 'miss' | 'north'
 type Outcome = {
   region: SigunguRegion | null
   coords: [number, number] | null
   landing: Vec
 }
+
+/** 꽂힌 시도의 여행지. 조회 실패도 'none'으로 합친다 — 다트 결과는 이미 나왔다. */
+type DestinationState =
+  | { status: 'idle' }
+  | { status: 'pending' }
+  | { status: 'found'; destination: Destination }
+  | { status: 'none' }
 
 const { width: W, height: H, dock: DOCK } = koreaMap
 /** 다트가 대기하는 곳. 지도 아래 바다 한가운데. */
@@ -37,12 +59,17 @@ export function DartGame() {
   const [pull, setPull] = useState<Vec>({ x: 0, y: 0 })
   const [outcome, setOutcome] = useState<Outcome | null>(null)
   const [isRevealed, setIsRevealed] = useState(false)
+  const [destination, setDestination] = useState<DestinationState>({
+    status: 'idle',
+  })
 
   const svgRef = useRef<SVGSVGElement>(null)
   const dartRef = useRef<SVGGElement>(null)
   const grabRef = useRef<Vec>({ x: 0, y: 0 })
   const rafRef = useRef(0)
   const revealRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  /** 던질 때마다 증가. 늦게 온 여행지 응답이 새 결과를 덮지 않게 한다. */
+  const throwIdRef = useRef(0)
   const hitRef = useRef<{
     ctx: CanvasRenderingContext2D
     entries: { region: SigunguRegion; path: Path2D }[]
@@ -59,17 +86,22 @@ export function DartGame() {
   function reset(nextMode?: Mode) {
     cancelAnimationFrame(rafRef.current)
     clearTimeout(revealRef.current)
+    throwIdRef.current += 1
     if (nextMode) setMode(nextMode)
     setPhase('ready')
     setPull({ x: 0, y: 0 })
     setOutcome(null)
     setIsRevealed(false)
+    setDestination({ status: 'idle' })
   }
 
   function toSvg(e: React.PointerEvent): Vec {
     const rect = svgRef.current!.getBoundingClientRect()
     const scale = W / rect.width
-    return { x: (e.clientX - rect.left) * scale, y: (e.clientY - rect.top) * scale }
+    return {
+      x: (e.clientX - rect.left) * scale,
+      y: (e.clientY - rect.top) * scale,
+    }
   }
 
   function hitTest(point: Vec): SigunguRegion | null {
@@ -91,11 +123,38 @@ export function DartGame() {
     return null
   }
 
+  /** 꽂힌 시도의 여행지 한 곳. 화면은 repo만 알고, mock인지 관광 API인지 모른다. */
+  function pickDestination(region: SigunguRegion) {
+    const key = PROVINCE_TO_REGION[region.province]
+    if (!key) {
+      setDestination({ status: 'none' })
+      return
+    }
+    const throwId = throwIdRef.current
+    setDestination({ status: 'pending' })
+    destinationRepo
+      .draw({ region: key })
+      .then((picked) => {
+        if (throwId !== throwIdRef.current) return
+        setDestination(
+          picked
+            ? { status: 'found', destination: picked }
+            : { status: 'none' },
+        )
+      })
+      .catch(() => {
+        if (throwId !== throwIdRef.current) return
+        setDestination({ status: 'none' })
+      })
+  }
+
   function land(target: Vec, chosen: SigunguRegion | null) {
     const region = chosen ?? hitTest(target)
     if (!region) {
+      const [lat, lng] = unprojectPoint(target.x, target.y)
       setOutcome({ region: null, coords: null, landing: target })
-      setPhase('miss')
+      // 육지 판정이 먼저이므로 여기 오는 점은 남한 땅이 아니다. 이북인지 바다인지만 가른다.
+      setPhase(isNorthOfMdl(lat, lng) ? 'north' : 'miss')
       return
     }
     // 울릉군은 인셋 박스에 그려 svg 좌표가 실좌표와 어긋난다. 이때만 지리 중심으로 표기.
@@ -105,6 +164,7 @@ export function DartGame() {
         : unprojectPoint(target.x, target.y)
     setOutcome({ region, coords, landing: target })
     setPhase('hit')
+    pickDestination(region)
     if (chosen) revealRef.current = setTimeout(() => setIsRevealed(true), 450)
   }
 
@@ -137,8 +197,10 @@ export function DartGame() {
     const p = toSvg(e)
     if (Math.hypot(p.x - HOME.x, p.y - HOME.y) > GRAB_RADIUS) return
     grabRef.current = p
+    throwIdRef.current += 1
     setOutcome(null)
     setIsRevealed(false)
+    setDestination({ status: 'idle' })
     setPull({ x: 0, y: 0 })
     setPhase('aiming')
     try {
@@ -190,12 +252,12 @@ export function DartGame() {
   const power = throwPower(pull)
   const isAiming = phase === 'aiming'
   const target = useMemo(() => landingPoint(HOME, pull), [pull])
-  const dartPos: Vec =
-    phase === 'hit' || phase === 'miss'
-      ? (outcome?.landing ?? HOME)
-      : isAiming
-        ? { x: HOME.x + pull.x, y: HOME.y + pull.y }
-        : HOME
+  const isLanded = phase === 'hit' || phase === 'miss' || phase === 'north'
+  const dartPos: Vec = isLanded
+    ? (outcome?.landing ?? HOME)
+    : isAiming
+      ? { x: HOME.x + pull.x, y: HOME.y + pull.y }
+      : HOME
   const dartAngle =
     isAiming && power >= MIN_POWER ? flightAngle(dartPos, target) : 0
   const showResult = phase === 'hit' && (mode === 'aim' || isRevealed)
@@ -233,7 +295,9 @@ export function DartGame() {
           onPointerUp={onPointerUp}
           onPointerCancel={() => phase === 'aiming' && setPhase('ready')}
         >
-          <KoreaMapLayer highlightCode={showResult ? outcome?.region?.code : null} />
+          <KoreaMapLayer
+            highlightCode={showResult ? outcome?.region?.code : null}
+          />
 
           {/* 파워 링: 당길수록 라임 게이지가 찬다 */}
           {isAiming && (
@@ -284,14 +348,21 @@ export function DartGame() {
           )}
 
           {/* 다트. 비행 중엔 rAF가 transform을 직접 만진다 */}
-          {phase !== 'hit' && phase !== 'miss' && (
+          {!isLanded && (
             <g
               ref={dartRef}
               transform={`translate(${dartPos.x} ${dartPos.y}) rotate(${dartAngle})`}
               className="pointer-events-none"
             >
               <path d="M0 -36 L8 -8 L-8 -8 Z" className="fill-ink" />
-              <rect x={-3.5} y={-10} width={7} height={28} rx={3.5} className="fill-ink" />
+              <rect
+                x={-3.5}
+                y={-10}
+                width={7}
+                height={28}
+                rx={3.5}
+                className="fill-ink"
+              />
               <path d="M0 10 L12 30 L0 23 L-12 30 Z" className="fill-lime" />
             </g>
           )}
@@ -321,13 +392,58 @@ export function DartGame() {
       </div>
 
       {showResult && outcome?.region && outcome.coords && (
-        <DartResultCard
-          region={outcome.region}
-          coords={outcome.coords}
-          onRetry={() => reset()}
-        />
+        <>
+          <DartResultCard
+            region={outcome.region}
+            coords={outcome.coords}
+            onRetry={() => reset()}
+          />
+          <DestinationSlot
+            state={destination}
+            province={outcome.region.province}
+          />
+        </>
       )}
       {phase === 'miss' && <DartMissCard onRetry={() => reset()} />}
+      {phase === 'north' && <DartNorthCard onRetry={() => reset()} />}
     </div>
   )
+}
+
+/** 다트 결과 카드 아래에 붙는 여행지. 조회를 기다리느라 다트 결과가 늦어지지 않게 분리했다. */
+function DestinationSlot({
+  state,
+  province,
+}: {
+  state: DestinationState
+  province: string
+}) {
+  if (state.status === 'idle') return null
+
+  if (state.status === 'pending') {
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        className="rounded-card border-line bg-surface animate-rise border p-6"
+      >
+        <span className="sr-only">여행지를 고르는 중</span>
+        <SkeletonBlock className="h-4 w-1/5" />
+        <SkeletonBlock className="mt-3 h-8 w-3/5" />
+        <SkeletonBlock className="mt-6 h-4 w-4/5" />
+      </div>
+    )
+  }
+
+  if (state.status === 'none') {
+    return (
+      <EmptyState
+        icon={MapTrifoldIcon}
+        title={`${province}엔 아직 등록된 여행지가 없습니다`}
+        description="다트는 잘 꽂혔어요. 이 지역으로 여행방은 만들 수 있습니다."
+      />
+    )
+  }
+
+  return <DestinationCard destination={state.destination} />
 }
