@@ -1,11 +1,20 @@
 import questionSeed from '@/mocks/quiz.json'
 import resultSeed from '@/mocks/compat.json'
 import type { CompatRepository } from '../repositories'
-import type { CompatAxisBreakdown, CompatResult, QuizQuestion } from '../types'
+import type {
+  CompatAxisBreakdown,
+  CompatMember,
+  CompatResult,
+  QuizQuestion,
+} from '../types'
 import { findProfile } from './authRepo'
 import { resolve } from './state'
 
 const questions = questionSeed as QuizQuestion[]
+
+function toCompatMember(profile: { id: string; name: string }): CompatMember {
+  return { id: profile.id, name: profile.name }
+}
 
 function buildResult(): CompatResult {
   const [leftId, rightId] = resultSeed.members
@@ -18,7 +27,7 @@ function buildResult(): CompatResult {
     percent: resultSeed.percent,
     headline: resultSeed.headline,
     description: resultSeed.description,
-    members: [left, right],
+    members: [toCompatMember(left), toCompatMember(right)],
     breakdown: resultSeed.breakdown as CompatAxisBreakdown[],
   }
 }

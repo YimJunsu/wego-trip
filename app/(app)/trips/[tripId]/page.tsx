@@ -3,7 +3,7 @@ import { CopyCodeButton } from '@/components/dashboard/CopyCodeButton'
 import { ThemeBadge } from '@/components/dashboard/ThemeBadge'
 import { TripDetailTabs } from '@/components/dashboard/TripDetailTabs'
 import { parseDataState, settlementRepo, tripRepo } from '@/lib/data'
-import { requireUser } from '@/lib/auth/session'
+import { requireMemberPage } from '@/lib/auth/session'
 import type { PageProps } from '@/lib/types/page'
 import { formatDateRange, formatDday, formatNights } from '@/lib/utils/format'
 
@@ -11,9 +11,9 @@ export default async function TripDetailPage({
   params,
   searchParams,
 }: PageProps<{ tripId: string }>) {
-  await requireUser()
-
   const { tripId } = await params
+  await requireMemberPage(tripId)
+
   const { state } = await searchParams
   const opts = { state: parseDataState(state) }
 

@@ -67,6 +67,14 @@ export class InvalidCredentialsError extends Error {
   }
 }
 
+/** 존재하지 않는 초대코드. 액션에서 이 타입만 잡아야 다른 오류(repo 버그 등)가 묻히지 않는다. */
+export class InvalidInviteCodeError extends Error {
+  constructor() {
+    super('그런 초대코드는 없습니다.')
+    this.name = 'InvalidInviteCodeError'
+  }
+}
+
 /**
  * 인증. 자격증명(Account)은 이 인터페이스 밖으로 나가지 않는다 —
  * 모든 메서드가 Profile만 반환한다.

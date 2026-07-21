@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { requireUser } from '@/lib/auth/session'
-import { tripRepo } from '@/lib/data'
+import { InvalidInviteCodeError, tripRepo } from '@/lib/data'
 import type { DestinationTheme, Trip } from '@/lib/data/types'
 
 export type TripFormState = {
@@ -67,7 +67,10 @@ export async function joinTripAction(
       field(formData, 'code'),
     )
     return { trip }
-  } catch {
-    return { message: '그런 코드는 없습니다. 방장에게 다시 물어보세요.' }
+  } catch (error) {
+    if (error instanceof InvalidInviteCodeError) {
+      return { message: '그런 코드는 없습니다. 방장에게 다시 물어보세요.' }
+    }
+    throw error
   }
 }

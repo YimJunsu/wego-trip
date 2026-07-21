@@ -129,10 +129,13 @@ export type CompatAxisBreakdown = {
   right: number
 }
 
+/** 궁합 카드는 이름만 쓴다. Profile 전체를 실어 보내면 이메일·전화번호가 브라우저로 나간다. */
+export type CompatMember = { id: string; name: string }
+
 export type CompatResult = {
   percent: number
   headline: string
   description: string
-  members: [Profile, Profile]
+  members: [CompatMember, CompatMember]
   breakdown: CompatAxisBreakdown[]
 }

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { authRepo, tripRepo } from '@/lib/data'
 import type { Profile } from '@/lib/data/types'
 
@@ -44,6 +44,15 @@ export async function requireUser(): Promise<Profile> {
   return user
 }
 
+/** requireMember/requireMemberPage가 공유하는 멤버십 조회. 실패 시 반응은 호출부가 정한다. */
+async function checkMembership(
+  tripId: string,
+): Promise<{ user: Profile; isMember: boolean }> {
+  const user = await requireUser()
+  const members = await tripRepo.listMembers(tripId)
+  return { user, isMember: members.some((m) => m.userId === user.id) }
+}
+
 /**
  * Server Action은 페이지 게이트를 거치지 않고 id로 바로 호출될 수 있다(네트워크 레벨).
  * 로그인만으로는 부족하다 — tripId에 속한 멤버인지까지 여기서 다시 확인해야
@@ -51,10 +60,18 @@ export async function requireUser(): Promise<Profile> {
  * 첫 줄에 둔다.
  */
 export async function requireMember(tripId: string): Promise<Profile> {
-  const user = await requireUser()
-  const members = await tripRepo.listMembers(tripId)
-  if (!members.some((m) => m.userId === user.id)) {
-    throw new Error('이 여행방의 멤버가 아닙니다.')
-  }
+  const { user, isMember } = await checkMembership(tripId)
+  if (!isMember) throw new Error('이 여행방의 멤버가 아닙니다.')
+  return user
+}
+
+/**
+ * 여행방 읽기 페이지(상세/정산/장소) 첫 줄에 둔다. 멤버가 아니라는 사실을 그대로 던지면
+ * "여행방이 없다"와 "내 것이 아니다"를 구분할 수 있게 돼, 초대코드를 몰라도 남의 방이
+ * 존재한다는 것 자체를 알아낼 수 있다 — 그래서 404로 감춰 구분이 안 되게 한다.
+ */
+export async function requireMemberPage(tripId: string): Promise<Profile> {
+  const { user, isMember } = await checkMembership(tripId)
+  if (!isMember) notFound()
   return user
 }

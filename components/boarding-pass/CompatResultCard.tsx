@@ -3,8 +3,8 @@ import { Stamp } from '@/components/boarding-pass/Stamp'
 import { Avatar } from '@/components/ui/Avatar'
 import type {
   CompatAxisBreakdown,
+  CompatMember,
   CompatResult,
-  Profile,
 } from '@/lib/data/types'
 
 export function CompatResultCard({ result }: { result: CompatResult }) {
@@ -50,7 +50,7 @@ export function CompatResultCard({ result }: { result: CompatResult }) {
   )
 }
 
-function Person({ profile }: { profile: Profile }) {
+function Person({ profile }: { profile: CompatMember }) {
   return (
     <span className="flex items-center gap-1.5">
       <Avatar name={profile.name} size="sm" />

@@ -1,6 +1,6 @@
 import seed from '@/mocks/trips.json'
 import memberSeed from '@/mocks/members.json'
-import type { TripRepository } from '../repositories'
+import { InvalidInviteCodeError, type TripRepository } from '../repositories'
 import type { Member, Trip } from '../types'
 import { resolve } from './state'
 
@@ -55,7 +55,7 @@ export const mockTripRepo: TripRepository = {
     const trip = trips.find(
       (t) => t.inviteCode.toUpperCase() === code.trim().toUpperCase(),
     )
-    if (!trip) throw new Error('그런 초대코드는 없습니다.')
+    if (!trip) throw new InvalidInviteCodeError()
 
     // 이미 들어와 있으면 다시 넣지 않는다. 두 번 눌러도 멤버가 겹치지 않는다.
     const already = members.some(
