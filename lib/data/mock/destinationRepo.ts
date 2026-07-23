@@ -1,7 +1,6 @@
 import seed from '@/mocks/destinations.json'
 import type { DestinationRepository } from '../repositories'
 import type { Destination, DestinationFilter } from '../types'
-import { resolve } from './state'
 
 const destinations = seed as Destination[]
 
@@ -21,16 +20,12 @@ function match(dst: Destination, filter?: DestinationFilter): boolean {
 }
 
 export const mockDestinationRepo: DestinationRepository = {
-  async list(filter, opts) {
-    const found = destinations.filter((d) => match(d, filter))
-    return resolve(opts, found, [])
+  async list(filter) {
+    return destinations.filter((d) => match(d, filter))
   },
 
-  async draw(filter, opts) {
+  async draw(filter) {
     const pool = destinations.filter((d) => match(d, filter))
-    const picked = pool.length
-      ? pool[Math.floor(Math.random() * pool.length)]
-      : null
-    return resolve(opts, picked, null)
+    return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null
   },
 }

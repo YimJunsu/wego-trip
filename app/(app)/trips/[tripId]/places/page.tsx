@@ -2,24 +2,20 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { CaretLeftIcon } from '@phosphor-icons/react/dist/ssr'
 import { PlacesPanel } from '@/components/dashboard/PlacesPanel'
-import { parseDataState, placeRepo, tripRepo } from '@/lib/data'
+import { placeRepo, tripRepo } from '@/lib/data'
 import { requireMemberPage } from '@/lib/auth/session'
 import type { PageProps } from '@/lib/types/page'
 
 export default async function PlacesPage({
   params,
-  searchParams,
 }: PageProps<{ tripId: string }>) {
   const { tripId } = await params
   await requireMemberPage(tripId)
 
-  const { state } = await searchParams
-  const opts = { state: parseDataState(state) }
-
-  const trip = await tripRepo.get(tripId, opts)
+  const trip = await tripRepo.get(tripId)
   if (!trip) notFound()
 
-  const places = await placeRepo.listByTrip(tripId, opts)
+  const places = await placeRepo.listByTrip(tripId)
 
   return (
     <div className="flex flex-col gap-6">

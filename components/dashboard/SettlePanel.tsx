@@ -90,11 +90,6 @@ export function SettlePanel({
           누가 누구에게
         </h2>
         <SettlementList settlements={settlements} members={members} />
-        <p className="rounded-inner border-line text-muted mt-4 border border-dashed p-4 text-xs leading-relaxed">
-          MOCK · 이 송금 목록은 미리 계산해 둔 고정값입니다. 지출을 새로 넣어도
-          다시 계산되지 않습니다. 엔빵·운전자 할인·송금 최소화 로직은
-          lib/settle/이 생길 때 붙습니다.
-        </p>
       </section>
     </div>
   )

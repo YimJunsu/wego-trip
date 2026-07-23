@@ -8,6 +8,8 @@ import type {
   Place,
   QuizQuestion,
   Settlement,
+  StyleCode,
+  TravelStyle,
   Trip,
 } from './types'
 
@@ -15,14 +17,6 @@ import type {
  * 데이터 접근 계약. UI는 이 인터페이스만 알고, mock인지 실서버인지 몰라야 한다.
  * 구현 교체 시 화면은 건드리지 않는다. (CONVENTIONS.md §4)
  */
-
-/**
- * mock 전용 장치. 화면의 빈/로딩/에러 상태를 눈으로 확인하려고 넣었다.
- * 페이지가 `?state=` search param을 읽어 그대로 넘긴다. 실서버 구현은 이 값을 무시한다.
- * Supabase 전환 시 제거 대상.
- */
-export type DataState = 'empty' | 'loading' | 'error'
-export type QueryOptions = { state?: DataState }
 
 export type CreateTripInput = {
   name: string
@@ -89,8 +83,8 @@ export interface AuthRepository {
 
 export interface TripRepository {
   /** userId가 속한 여행방만 돌려준다. */
-  list(userId: string, opts?: QueryOptions): Promise<Trip[]>
-  get(id: string, opts?: QueryOptions): Promise<Trip | null>
+  list(userId: string): Promise<Trip[]>
+  get(id: string): Promise<Trip | null>
   /** displayName은 이 방에서 쓸 이름. 기본값은 호출부가 Profile.name으로 채운다. */
   create(
     userId: string,
@@ -98,34 +92,39 @@ export interface TripRepository {
     input: CreateTripInput,
   ): Promise<Trip>
   joinByCode(userId: string, displayName: string, code: string): Promise<Trip>
-  listMembers(tripId: string, opts?: QueryOptions): Promise<Member[]>
+  listMembers(tripId: string): Promise<Member[]>
 }
 
 export interface ExpenseRepository {
-  listByTrip(tripId: string, opts?: QueryOptions): Promise<Expense[]>
+  listByTrip(tripId: string): Promise<Expense[]>
   add(input: AddExpenseInput): Promise<Expense>
 }
 
 export interface SettlementRepository {
   /** 지금은 계산하지 않는다. seed에 미리 담긴 송금 리스트를 반환한다. */
-  listByTrip(tripId: string, opts?: QueryOptions): Promise<Settlement[]>
+  listByTrip(tripId: string): Promise<Settlement[]>
 }
 
 export interface DestinationRepository {
-  list(filter?: DestinationFilter, opts?: QueryOptions): Promise<Destination[]>
-  draw(
-    filter?: DestinationFilter,
-    opts?: QueryOptions,
-  ): Promise<Destination | null>
+  list(filter?: DestinationFilter): Promise<Destination[]>
+  draw(filter?: DestinationFilter): Promise<Destination | null>
 }
 
 export interface PlaceRepository {
-  listByTrip(tripId: string, opts?: QueryOptions): Promise<Place[]>
+  listByTrip(tripId: string): Promise<Place[]>
   toggleSave(placeId: string, tripId: string): Promise<Place>
 }
 
 export interface CompatRepository {
-  questions(opts?: QueryOptions): Promise<QuizQuestion[]>
+  questions(): Promise<QuizQuestion[]>
   /** 점수 산출 로직은 아직 없다. answers는 받되 결과는 seed 고정값이다. */
-  result(answers: number[], opts?: QueryOptions): Promise<CompatResult>
+  result(answers: number[]): Promise<CompatResult>
+}
+
+/** 여행 성향 테스트. 비회원도 쓰는 콘텐츠라 userId를 받지 않는다. */
+export interface TravelStyleRepository {
+  questions(): Promise<QuizQuestion[]>
+  list(): Promise<TravelStyle[]>
+  /** 없는 코드면 null. 공유 URL로 아무 값이나 들어올 수 있다. */
+  get(code: StyleCode): Promise<TravelStyle | null>
 }

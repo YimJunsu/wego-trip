@@ -8,7 +8,6 @@ import { DrawSlot } from '@/components/dashboard/DrawSlot'
 import { EmptyState } from '@/components/dashboard/EmptyState'
 import { FilterChip } from '@/components/dashboard/FilterChip'
 import { drawDestination, listDestinations } from '@/lib/destinations/actions'
-import type { DataState } from '@/lib/data/repositories'
 import type {
   BudgetLevel,
   Destination,
@@ -31,11 +30,9 @@ const MIN_SPIN_MS = 1200
 
 export function RandomDrawer({
   initialCandidates,
-  state,
 }: {
   /** 필터가 없을 때의 후보. 서버에서 받아 두어야 "후보 0곳"이 깜빡이지 않는다. */
   initialCandidates: Destination[]
-  state?: DataState
 }) {
   const [themes, setThemes] = useState<DestinationTheme[]>([])
   const [budget, setBudget] = useState<BudgetLevel | undefined>()
@@ -72,10 +69,7 @@ export function RandomDrawer({
     setResult(null)
     const spun = new Promise((r) => setTimeout(r, MIN_SPIN_MS))
     try {
-      const [picked] = await Promise.all([
-        drawDestination(filter, { state }),
-        spun,
-      ])
+      const [picked] = await Promise.all([drawDestination(filter), spun])
       setResult(picked)
       setPhase('done')
     } catch {

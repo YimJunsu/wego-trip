@@ -1,12 +1,8 @@
 import { JoinForm } from '@/components/boarding-pass/JoinForm'
-import { tripRepo } from '@/lib/data'
 import { requireUser } from '@/lib/auth/session'
 
 export default async function JoinPage() {
-  const user = await requireUser()
-
-  /** mock에서만 보여 주는 힌트. 실제 코드는 친구가 불러 준다. */
-  const trips = await tripRepo.list(user.id)
+  await requireUser()
 
   return (
     <div className="flex flex-col gap-6">
@@ -23,10 +19,6 @@ export default async function JoinPage() {
       </header>
 
       <JoinForm />
-
-      <p className="border-pass-line text-pass-navy/70 rounded-pass border border-dashed p-3 font-mono text-xs tracking-widest">
-        MOCK · 써 볼 코드: {trips.map((t) => t.inviteCode).join(' / ')}
-      </p>
     </div>
   )
 }

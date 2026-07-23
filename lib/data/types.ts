@@ -119,6 +119,34 @@ export type QuizOption = {
   score: number
 }
 
+/**
+ * 여행 성향 코드. 축마다 글자 하나씩, 순서는 plan·morning·activity·budget으로 고정한다.
+ * 이 순서가 곧 공유 URL(/style/PMAS)이라 한 번 나간 뒤에는 바꿀 수 없다.
+ */
+export type StyleLetter = {
+  plan: 'P' | 'F'
+  morning: 'M' | 'N'
+  activity: 'A' | 'R'
+  budget: 'S' | 'L'
+}
+export type StyleCode = string
+
+export type TravelStyle = {
+  code: StyleCode
+  /** "나는 ○○ 여행이다"의 ○○. */
+  name: string
+  tagline: string
+  emoji: string
+  description: string
+  strength: string
+  caution: string
+  /** 잘 맞는 동행 유형. 같은 파일 안의 다른 code를 가리킨다. */
+  matchCode: StyleCode
+  matchReason: string
+  /** 결과 이미지 생성용 장면 묘사. 화면에는 쓰지 않는다. (scripts/generate-style-assets.mjs) */
+  scene: string
+}
+
 export type CompatAxisBreakdown = {
   axis: QuizAxis
   label: string

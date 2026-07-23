@@ -2,7 +2,6 @@ import seed from '@/mocks/trips.json'
 import memberSeed from '@/mocks/members.json'
 import { InvalidInviteCodeError, type TripRepository } from '../repositories'
 import type { Member, Trip } from '../types'
-import { resolve } from './state'
 
 const trips = [...(seed as Trip[])]
 const members = [...(memberSeed as Member[])]
@@ -22,15 +21,13 @@ function generateInviteCode(): string {
 }
 
 export const mockTripRepo: TripRepository = {
-  async list(userId, opts) {
+  async list(userId) {
     const mine = members.filter((m) => m.userId === userId).map((m) => m.tripId)
-    const found = trips.filter((t) => mine.includes(t.id))
-    return resolve(opts, found, [])
+    return trips.filter((t) => mine.includes(t.id))
   },
 
-  async get(id, opts) {
-    const found = trips.find((t) => t.id === id) ?? null
-    return resolve(opts, found, null)
+  async get(id) {
+    return trips.find((t) => t.id === id) ?? null
   },
 
   async create(userId, displayName, input) {
@@ -73,8 +70,7 @@ export const mockTripRepo: TripRepository = {
     return trip
   },
 
-  async listMembers(tripId, opts) {
-    const found = members.filter((m) => m.tripId === tripId)
-    return resolve(opts, found, [])
+  async listMembers(tripId) {
+    return members.filter((m) => m.tripId === tripId)
   },
 }

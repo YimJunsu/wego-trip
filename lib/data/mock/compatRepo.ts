@@ -8,7 +8,6 @@ import type {
   QuizQuestion,
 } from '../types'
 import { findProfile } from './authRepo'
-import { resolve } from './state'
 
 const questions = questionSeed as QuizQuestion[]
 
@@ -33,13 +32,12 @@ function buildResult(): CompatResult {
 }
 
 export const mockCompatRepo: CompatRepository = {
-  async questions(opts) {
-    return resolve(opts, questions, [])
+  async questions() {
+    return questions
   },
 
   /** answers는 아직 쓰이지 않는다. 점수 산출 로직이 붙기 전까지 결과는 고정값이다. */
-  async result(_answers, opts) {
-    const built = buildResult()
-    return resolve(opts, built, built)
+  async result() {
+    return buildResult()
   },
 }

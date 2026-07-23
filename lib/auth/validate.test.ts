@@ -8,6 +8,7 @@ const VALID = {
   name: '임준수',
   email: 'junsu@wego.trip',
   password: 'wego1234',
+  passwordConfirm: 'wego1234',
   phone: '010-1234-5678',
   birthDate: '1995-03-14',
 }
@@ -31,6 +32,11 @@ test('비밀번호는 8자 이상', () => {
   assert.equal(validateSignUp({ ...VALID, password: 'wego1234' }, TODAY).password, undefined)
 })
 
+test('비밀번호 확인이 다르면 에러', () => {
+  assert.ok(validateSignUp({ ...VALID, passwordConfirm: 'wego9999' }, TODAY).passwordConfirm)
+  assert.equal(validateSignUp({ ...VALID, passwordConfirm: 'wego1234' }, TODAY).passwordConfirm, undefined)
+})
+
 test('전화번호는 숫자 10~11자리', () => {
   assert.equal(validateSignUp({ ...VALID, phone: '01012345678' }, TODAY).phone, undefined)
   assert.equal(validateSignUp({ ...VALID, phone: '02-1234-5678' }, TODAY).phone, undefined)
@@ -47,7 +53,10 @@ test('생년월일은 유효한 날짜여야 하고 미래일 수 없다', () =>
 })
 
 test('여러 필드가 동시에 틀리면 모두 보고한다', () => {
-  const errors = validateSignUp({ ...VALID, name: '', password: 'x' }, TODAY)
+  const errors = validateSignUp(
+    { ...VALID, name: '', password: 'x', passwordConfirm: 'x' },
+    TODAY,
+  )
   assert.equal(Object.keys(errors).length, 2)
 })
 

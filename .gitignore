@@ -96,3 +96,8 @@ Thumbs.db
 **/*.md
 !README.md
 !**/README.md
+
+# 서비스 계정 키 등 로컬 자격증명 (절대 커밋 금지)
+etc/
+*.json.key
+service-account*.json

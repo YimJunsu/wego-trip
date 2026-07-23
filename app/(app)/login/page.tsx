@@ -17,10 +17,6 @@ export default async function LoginPage() {
       </header>
 
       <LoginForm />
-
-      <p className="border-line text-muted rounded-inner border border-dashed p-3 font-mono text-xs tracking-widest">
-        MOCK · junsu@wego.trip / wego1234
-      </p>
     </div>
   )
 }

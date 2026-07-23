@@ -10,7 +10,7 @@ export async function HeaderAuth() {
     return (
       <Link
         href="/login"
-        className="text-muted hover:text-ink block rounded-full px-3 py-1.5 text-sm font-medium transition duration-200"
+        className="text-muted hover:text-ink block shrink-0 rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition duration-200"
       >
         로그인
       </Link>
@@ -18,11 +18,13 @@ export async function HeaderAuth() {
   }
 
   return (
-    <form action={signOutAction} className="flex items-center gap-1">
-      <span className="text-muted px-2 text-sm font-medium">{user.name}</span>
+    <form action={signOutAction} className="flex shrink-0 items-center gap-1">
+      <span className="text-muted hidden px-2 text-sm font-medium sm:block">
+        {user.name}
+      </span>
       <button
         type="submit"
-        className="text-muted hover:text-ink rounded-full px-3 py-1.5 text-sm font-medium transition duration-200"
+        className="text-muted hover:text-ink rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition duration-200"
       >
         로그아웃
       </button>

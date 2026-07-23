@@ -34,6 +34,13 @@ export function SignUpForm() {
           error={errors.password}
         />
         <TextField
+          label="비밀번호 확인"
+          name="passwordConfirm"
+          type="password"
+          required
+          error={errors.passwordConfirm}
+        />
+        <TextField
           label="전화번호"
           name="phone"
           type="tel"

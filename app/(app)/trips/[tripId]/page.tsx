@@ -2,27 +2,23 @@ import { notFound } from 'next/navigation'
 import { CopyCodeButton } from '@/components/dashboard/CopyCodeButton'
 import { ThemeBadge } from '@/components/dashboard/ThemeBadge'
 import { TripDetailTabs } from '@/components/dashboard/TripDetailTabs'
-import { parseDataState, settlementRepo, tripRepo } from '@/lib/data'
+import { settlementRepo, tripRepo } from '@/lib/data'
 import { requireMemberPage } from '@/lib/auth/session'
 import type { PageProps } from '@/lib/types/page'
 import { formatDateRange, formatDday, formatNights } from '@/lib/utils/format'
 
 export default async function TripDetailPage({
   params,
-  searchParams,
 }: PageProps<{ tripId: string }>) {
   const { tripId } = await params
   await requireMemberPage(tripId)
 
-  const { state } = await searchParams
-  const opts = { state: parseDataState(state) }
-
-  const trip = await tripRepo.get(tripId, opts)
+  const trip = await tripRepo.get(tripId)
   if (!trip) notFound()
 
   const [members, settlements] = await Promise.all([
-    tripRepo.listMembers(tripId, opts),
-    settlementRepo.listByTrip(tripId, opts),
+    tripRepo.listMembers(tripId),
+    settlementRepo.listByTrip(tripId),
   ])
 
   return (

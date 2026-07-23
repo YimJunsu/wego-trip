@@ -1,14 +1,11 @@
 import { DartGame } from '@/components/dashboard/DartGame'
 import { RandomDrawer } from '@/components/dashboard/RandomDrawer'
 import { RandomModeTabs } from '@/components/dashboard/RandomModeTabs'
-import { destinationRepo, parseDataState } from '@/lib/data'
+import { destinationRepo } from '@/lib/data'
 import { rollWind } from '@/lib/geo/dart'
-import type { PageProps } from '@/lib/types/page'
 
-export default async function RandomPage({ searchParams }: PageProps) {
-  const { state } = await searchParams
-  const dataState = parseDataState(state)
-  const candidates = await destinationRepo.list(undefined, { state: dataState })
+export default async function RandomPage() {
+  const candidates = await destinationRepo.list()
 
   return (
     <div className="flex flex-col gap-6">
@@ -23,9 +20,7 @@ export default async function RandomPage({ searchParams }: PageProps) {
 
       <RandomModeTabs
         dartPanel={<DartGame initialWind={rollWind()} />}
-        slotPanel={
-          <RandomDrawer initialCandidates={candidates} state={dataState} />
-        }
+        slotPanel={<RandomDrawer initialCandidates={candidates} />}
       />
     </div>
   )

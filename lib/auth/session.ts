@@ -2,19 +2,25 @@ import { cookies } from 'next/headers'
 import { notFound, redirect } from 'next/navigation'
 import { authRepo, tripRepo } from '@/lib/data'
 import type { Profile } from '@/lib/data/types'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
 
 /**
- * 쿠키 세션. Supabase Auth가 정확히 이 모양(httpOnly 쿠키)을 쓰므로,
- * 전환 시 이 파일 안쪽만 갈아끼우고 화면은 건드리지 않는다.
+ * 세션 seam. 화면은 이 파일의 함수만 쓰고 mock인지 Supabase인지 몰라야 한다.
  *
- * mock 단계의 한계: 값이 서명 없는 userId라 브라우저에서 고치면 사칭된다.
- * Supabase 전환 시 서명된 JWT가 이 자리를 대신한다.
+ * mock: 서명 없는 userId를 담은 httpOnly 쿠키. 브라우저에서 고치면 사칭되는 게 한계다.
+ * supabase: Supabase Auth가 서명된 JWT를 자기 쿠키에 심고 검증한다 — createSession은
+ *   인증 클라이언트가 이미 세션을 세웠으므로 무동작이 된다.
  */
+
+const useSupabase = process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase'
 
 const SESSION_COOKIE = 'wego_session'
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 30
 
 export async function createSession(userId: string): Promise<void> {
+  // supabase 모드: signUp/signInWithPassword가 이미 세션 쿠키를 심었다. 할 일 없음.
+  if (useSupabase) return
+
   const store = await cookies()
   store.set(SESSION_COOKIE, userId, {
     httpOnly: true,
@@ -26,11 +32,26 @@ export async function createSession(userId: string): Promise<void> {
 }
 
 export async function destroySession(): Promise<void> {
+  if (useSupabase) {
+    const supabase = await createSupabaseServerClient()
+    await supabase.auth.signOut()
+    return
+  }
+
   const store = await cookies()
   store.delete(SESSION_COOKIE)
 }
 
 export async function getUser(): Promise<Profile | null> {
+  if (useSupabase) {
+    const supabase = await createSupabaseServerClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return null
+    return authRepo.findById(user.id)
+  }
+
   const store = await cookies()
   const userId = store.get(SESSION_COOKIE)?.value
   if (!userId) return null

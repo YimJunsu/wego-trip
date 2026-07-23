@@ -1,9 +1,11 @@
 import { mockAuthRepo } from './mock/authRepo'
+import { supabaseAuthRepo } from './supabase/authRepo'
 import { mockCompatRepo } from './mock/compatRepo'
 import { mockDestinationRepo } from './mock/destinationRepo'
 import { mockExpenseRepo } from './mock/expenseRepo'
 import { mockPlaceRepo } from './mock/placeRepo'
 import { mockSettlementRepo } from './mock/settlementRepo'
+import { mockTravelStyleRepo } from './mock/travelStyleRepo'
 import { mockTripRepo } from './mock/tripRepo'
 import type {
   AuthRepository,
@@ -12,6 +14,7 @@ import type {
   ExpenseRepository,
   PlaceRepository,
   SettlementRepository,
+  TravelStyleRepository,
   TripRepository,
 } from './repositories'
 
@@ -23,16 +26,20 @@ import type {
  *
  *   export const tripRepo: TripRepository =
  *     process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase' ? supabaseTripRepo : mockTripRepo
+ *
+ * 회원 도메인만 먼저 전환했다. 나머지는 각자 supabase 구현이 생길 때 같은 방식으로 켠다.
  */
-export const authRepo: AuthRepository = mockAuthRepo
+const useSupabase = process.env.NEXT_PUBLIC_DATA_SOURCE === 'supabase'
+
+export const authRepo: AuthRepository = useSupabase ? supabaseAuthRepo : mockAuthRepo
 export const tripRepo: TripRepository = mockTripRepo
 export const expenseRepo: ExpenseRepository = mockExpenseRepo
 export const settlementRepo: SettlementRepository = mockSettlementRepo
 export const destinationRepo: DestinationRepository = mockDestinationRepo
 export const placeRepo: PlaceRepository = mockPlaceRepo
 export const compatRepo: CompatRepository = mockCompatRepo
+export const travelStyleRepo: TravelStyleRepository = mockTravelStyleRepo
 
-export { parseDataState } from './mock/state'
 export {
   DuplicateEmailError,
   InvalidCredentialsError,

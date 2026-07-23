@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import {
   ArrowRightIcon,
@@ -8,15 +9,12 @@ import { actionButtonClass } from '@/components/dashboard/ActionButton'
 import { EmptyState } from '@/components/dashboard/EmptyState'
 import { TripCard } from '@/components/dashboard/TripCard'
 import { getUser } from '@/lib/auth/session'
-import { parseDataState, tripRepo } from '@/lib/data'
-import type { PageProps } from '@/lib/types/page'
+import { tripRepo } from '@/lib/data'
 
-export default async function HomePage({ searchParams }: PageProps) {
-  const { state } = await searchParams
-  const opts = { state: parseDataState(state) }
+export default async function HomePage() {
   const user = await getUser()
 
-  const trips = user ? await tripRepo.list(user.id, opts) : []
+  const trips = user ? await tripRepo.list(user.id) : []
   const membersByTrip = await Promise.all(
     trips.map((trip) => tripRepo.listMembers(trip.id)),
   )
@@ -58,6 +56,35 @@ export default async function HomePage({ searchParams }: PageProps) {
         <Link href="/join" className={actionButtonClass({ tone: 'quiet' })}>
           초대코드로 참여
           <ArrowRightIcon size={16} weight="bold" aria-hidden />
+        </Link>
+      </section>
+
+      <section>
+        <Link
+          href="/style"
+          className="rounded-card border-line bg-surface shadow-soft hover:shadow-lift flex items-center gap-4 border p-5 transition duration-300 ease-out hover:-translate-y-[3px]"
+        >
+          <Image
+            src="/images/mascot.webp"
+            alt=""
+            width={64}
+            height={64}
+            className="shrink-0"
+          />
+          <span className="flex-1">
+            <span className="font-display block text-lg font-semibold tracking-tight">
+              내 여행 성향은?
+            </span>
+            <span className="text-muted mt-1 block text-sm">
+              12문항 · 16유형 · 로그인 없이 바로. 결과는 친구에게 공유하세요.
+            </span>
+          </span>
+          <ArrowRightIcon
+            size={18}
+            weight="bold"
+            aria-hidden
+            className="text-muted shrink-0"
+          />
         </Link>
       </section>
 
@@ -104,7 +131,10 @@ export default async function HomePage({ searchParams }: PageProps) {
           </p>
           <Link
             href="/login"
-            className={actionButtonClass({ tone: 'ink', className: 'mt-4 w-full' })}
+            className={actionButtonClass({
+              tone: 'ink',
+              className: 'mt-4 w-full',
+            })}
           >
             로그인하고 여행방 만들기
           </Link>

@@ -1,11 +1,10 @@
-import { Suspense } from 'react'
 import Link from 'next/link'
 import { HeaderAuth } from '@/components/auth/HeaderAuth'
-import { MockStateBar } from '@/components/dashboard/MockStateBar'
 
 const NAV = [
   { href: '/', label: '홈' },
   { href: '/random', label: '뽑기' },
+  { href: '/style', label: '성향' },
   { href: '/join', label: '참여' },
   { href: '/compat', label: '궁합' },
 ]
@@ -14,21 +13,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <header className="border-line bg-paper/80 sticky top-0 z-30 border-b backdrop-blur-md">
-        <div className="mx-auto flex max-w-2xl items-center justify-between gap-4 px-4 py-3">
+        <div className="mx-auto flex max-w-2xl items-center justify-between gap-3 px-4 py-3">
           <Link
             href="/"
-            className="font-display text-lg font-semibold tracking-tight"
+            className="font-display shrink-0 text-lg font-semibold tracking-tight"
           >
             위고트립
           </Link>
-          <div className="flex items-center gap-1">
-            <nav>
-              <ul className="flex gap-1">
+          {/*
+            좁은 화면에서 메뉴가 글자 단위로 줄바꿈되지 않게 한다.
+            항목이 더 늘어 폭이 모자라면 줄을 늘리는 대신 가로로 밀어서 본다.
+          */}
+          <div className="flex min-w-0 items-center gap-1">
+            <nav className="min-w-0 [scrollbar-width:none] overflow-x-auto [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+              <ul className="flex gap-0.5 sm:gap-1">
                 {NAV.map(({ href, label }) => (
                   <li key={href}>
                     <Link
                       href={href}
-                      className="text-muted hover:text-ink block rounded-full px-3 py-1.5 text-sm font-medium transition duration-200"
+                      className="text-muted hover:text-ink block rounded-full px-2 py-1.5 text-sm font-medium whitespace-nowrap transition duration-200 sm:px-3"
                     >
                       {label}
                     </Link>
@@ -41,14 +44,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      {/* 하단 mock 상태바에 가리지 않도록 여백을 준다. */}
-      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-24">
+      <main className="mx-auto w-full max-w-2xl flex-1 px-4 pt-8 pb-16">
         {children}
       </main>
-
-      <Suspense fallback={null}>
-        <MockStateBar />
-      </Suspense>
     </>
   )
 }

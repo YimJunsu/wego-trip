@@ -4,19 +4,16 @@
 // mockAuthRepo(→ node:crypto, seed 계정)까지 함께 물고 있어 그대로 import하면 브라우저
 // 번들에 실려 나간다. 여기서 한 겹 감싸 서버에서만 repo를 불러 쓰게 한다.
 import { destinationRepo } from '@/lib/data'
-import type { QueryOptions } from '@/lib/data/repositories'
 import type { Destination, DestinationFilter } from '@/lib/data/types'
 
 export async function drawDestination(
   filter?: DestinationFilter,
-  opts?: QueryOptions,
 ): Promise<Destination | null> {
-  return destinationRepo.draw(filter, opts)
+  return destinationRepo.draw(filter)
 }
 
 export async function listDestinations(
   filter?: DestinationFilter,
-  opts?: QueryOptions,
 ): Promise<Destination[]> {
-  return destinationRepo.list(filter, opts)
+  return destinationRepo.list(filter)
 }

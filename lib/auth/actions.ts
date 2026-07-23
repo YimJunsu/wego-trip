@@ -24,6 +24,7 @@ export async function signUpAction(
     name: field(formData, 'name'),
     email: field(formData, 'email'),
     password: field(formData, 'password'),
+    passwordConfirm: field(formData, 'passwordConfirm'),
     phone: field(formData, 'phone'),
     birthDate: field(formData, 'birthDate'),
   }
@@ -34,9 +35,11 @@ export async function signUpAction(
 
   let userId: string
   try {
+    // passwordConfirm은 화면 전용 — 저장소로 넘기지 않는다.
+    const { passwordConfirm: _confirm, ...input } = fields
     const profile = await authRepo.signUp({
-      ...fields,
-      phone: normalizePhone(fields.phone),
+      ...input,
+      phone: normalizePhone(input.phone),
     })
     userId = profile.id
   } catch (error) {

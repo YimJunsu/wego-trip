@@ -7,6 +7,8 @@ export type SignUpFields = {
   name: string
   email: string
   password: string
+  /** 화면 전용 확인 입력. 저장소로는 넘어가지 않는다. */
+  passwordConfirm: string
   phone: string
   birthDate: string
 }
@@ -48,6 +50,10 @@ export function validateSignUp(
 
   if (fields.password.length < MIN_PASSWORD_LENGTH) {
     errors.password = `비밀번호는 ${MIN_PASSWORD_LENGTH}자 이상이어야 합니다.`
+  }
+
+  if (fields.password !== fields.passwordConfirm) {
+    errors.passwordConfirm = '비밀번호가 일치하지 않습니다.'
   }
 
   const phone = normalizePhone(fields.phone)

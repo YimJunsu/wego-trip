@@ -15,9 +15,13 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
+  // 공유 링크의 og:image가 절대 URL이어야 카카오톡·메시지에서 카드가 뜬다.
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  ),
   title: '위고트립 — 친구들과 국내여행',
   description:
-    '랜덤 여행지 추천, 초대코드 여행방, 엔빵 정산, 근처 맛집, 여행 궁합.',
+    '랜덤 여행지 추천, 초대코드 여행방, 엔빵 정산, 근처 맛집, 여행 성향 분석.',
 }
 
 export default function RootLayout({
