@@ -55,3 +55,22 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- 4) 이메일 중복 조회 -------------------------------------------------------
+-- 가입 폼이 제출 전에 미리 알려주기 위한 것. RLS가 남의 profiles 행을 막으므로
+-- boolean 하나만 돌려주는 security definer 함수로 좁게 연다 (행 내용은 못 본다).
+-- 이 함수는 "그 이메일이 가입돼 있다"를 알려주지만, 제출 시 중복 에러가 이미
+-- 같은 사실을 노출하므로 새로 생기는 노출은 없다.
+create or replace function public.email_taken(check_email text)
+returns boolean
+language sql
+security definer
+set search_path = ''
+stable
+as $$
+  select exists (
+    select 1 from public.profiles where lower(email) = lower(check_email)
+  );
+$$;
+
+grant execute on function public.email_taken(text) to anon, authenticated;

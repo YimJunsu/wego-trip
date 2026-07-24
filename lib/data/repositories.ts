@@ -79,6 +79,12 @@ export interface AuthRepository {
   /** 이메일·비밀번호가 맞지 않으면 InvalidCredentialsError를 던진다. */
   signIn(email: string, password: string): Promise<Profile>
   findById(id: string): Promise<Profile | null>
+  /**
+   * 가입 폼에서 제출 전에 미리 알려주기 위한 조회.
+   * 이 값은 "그 이메일이 가입돼 있다"를 알려주므로 열거 수단이 되지만,
+   * 제출 시 DuplicateEmailError가 이미 같은 사실을 노출하므로 새로 생기는 노출은 없다.
+   */
+  isEmailTaken(email: string): Promise<boolean>
 }
 
 export interface TripRepository {

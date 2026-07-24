@@ -102,4 +102,17 @@ export const supabaseAuthRepo: AuthRepository = {
     const supabase = await createSupabaseServerClient()
     return fetchProfile(supabase, id)
   },
+
+  async isEmailTaken(email: string): Promise<boolean> {
+    // RLS가 남의 profiles 행 조회를 막으므로 직접 select할 수 없다.
+    // boolean 하나만 돌려주는 security definer 함수를 거친다. (supabase/schema.sql)
+    const supabase = await createSupabaseServerClient()
+    const { data, error } = await supabase.rpc('email_taken', {
+      check_email: email.trim().toLowerCase(),
+    })
+    // 실패를 "사용 가능"으로 삼키면 안 된다 — 그러면 이미 있는 이메일에도
+    // "사용할 수 있다"고 단언하게 된다. 모르면 모른다고 던지고, 호출부가 침묵한다.
+    if (error) throw error
+    return data === true
+  },
 }

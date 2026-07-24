@@ -20,6 +20,11 @@ export const MIN_PASSWORD_LENGTH = 8
 /** 공백 없는 로컬@도메인.최상위. 실제 도달 여부는 이메일 인증이 볼 일이다. */
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+/** 형식만 본다. 중복 조회를 걸기 전에 호출부가 이걸로 거른다. */
+export function isEmailShape(value: string): boolean {
+  return EMAIL.test(value.trim())
+}
+
 /** 하이픈·공백을 걷어내고 숫자만 남긴다. 저장 형식은 숫자열이다. */
 export function normalizePhone(raw: string): string {
   return raw.replace(/\D/g, '')

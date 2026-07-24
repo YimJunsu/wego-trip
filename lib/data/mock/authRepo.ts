@@ -72,6 +72,11 @@ export const mockAuthRepo: AuthRepository = {
     const found = accounts.find((a) => a.id === id)
     return found ? toProfile(found) : null
   },
+
+  async isEmailTaken(email) {
+    const target = normalizeEmail(email)
+    return accounts.some((a) => normalizeEmail(a.email) === target)
+  },
 }
 
 /** 궁합 결과가 두 사람의 프로필을 동기적으로 필요로 한다. */

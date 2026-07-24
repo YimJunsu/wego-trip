@@ -12,6 +12,7 @@ export function Field({
   label,
   hint,
   error,
+  className,
   labelClassName,
   hintClassName,
   errorClassName,
@@ -20,6 +21,8 @@ export function Field({
   label: string
   hint?: string
   error?: string
+  /** 라벨·입력·힌트를 감싸는 바깥 래퍼. 간격을 호출부가 조정할 때 쓴다. */
+  className?: string
   labelClassName?: string
   hintClassName?: string
   errorClassName?: string
@@ -33,7 +36,7 @@ export function Field({
   const describedById = error ? `${id}-error` : hint ? `${id}-hint` : undefined
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={cn('flex flex-col gap-1.5', className)}>
       <label htmlFor={id} className={cn('text-sm font-bold', labelClassName)}>
         {label}
       </label>

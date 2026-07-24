@@ -7,7 +7,12 @@ import {
   InvalidCredentialsError,
 } from '@/lib/data'
 import { createSession, destroySession } from './session'
-import { normalizePhone, validateSignUp, type FieldErrors } from './validate'
+import {
+  isEmailShape,
+  normalizePhone,
+  validateSignUp,
+  type FieldErrors,
+} from './validate'
 
 export type AuthFormState = { errors?: FieldErrors; message?: string }
 
@@ -77,4 +82,24 @@ export async function signInAction(
 export async function signOutAction(): Promise<void> {
   await destroySession()
   redirect('/')
+}
+
+export type EmailCheck = 'idle' | 'checking' | 'available' | 'taken'
+
+/**
+ * 가입 폼이 이메일 입력을 끝냈을 때 부른다. 제출까지 기다리지 않고 바로 알려주기 위한 것.
+ * 형식이 틀리면 조회하지 않는다 — 그건 validateSignUp이 볼 일이다.
+ */
+export async function checkEmailAction(email: string): Promise<EmailCheck> {
+  const trimmed = email.trim()
+  if (!isEmailShape(trimmed)) return 'idle'
+  try {
+    return (await authRepo.isEmailTaken(trimmed)) ? 'taken' : 'available'
+  } catch (error) {
+    // 미리 알려주는 편의 기능이라 실패해도 가입을 막지 않는다. 다만 아무 말도
+    // 하지 않는다 — 틀린 "사용 가능"을 보여 주는 것보다 침묵이 낫다.
+    // 최종 판정은 signUp의 DuplicateEmailError가 한다.
+    console.error('이메일 중복 조회 실패:', error)
+    return 'idle'
+  }
 }
