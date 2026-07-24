@@ -3,8 +3,9 @@ import { updateSession } from '@/lib/supabase/middleware'
 
 /**
  * Supabase Auth 세션 갱신만 한다. mock 단계에서는 updateSession이 그냥 통과시킨다.
+ * (Next.js 16에서 middleware 파일 규약이 proxy로 바뀌었다.)
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   return updateSession(request)
 }
 

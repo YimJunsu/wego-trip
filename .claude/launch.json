@@ -2,9 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "//": "Next.js 16은 같은 디렉터리에서 dev 서버 두 개를 거부한다(포트를 바꿔도 마찬가지). 그래서 새로 띄우지 않고 이미 떠 있는 pnpm dev에 붙는다. 3000에 아무것도 없으면 먼저 `pnpm dev`를 실행할 것.",
+      "//": "Next.js 16은 같은 디렉터리에서 dev 서버 두 개를 거부한다(포트 무관). 이미 pnpm dev를 직접 띄워 뒀다면 새로 시작하지 말고 http://localhost:3000 에 붙일 것.",
       "name": "wego-trip-dev",
-      "url": "http://localhost:3000",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["dev"],
       "port": 3000
     }
   ]
